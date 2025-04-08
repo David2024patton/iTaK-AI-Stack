@@ -1,0 +1,32 @@
+back_up_workflow
+JSON11.9 KB
+Download
+How to Use the Automation Step by Step
+
+	1.	Set Up Your n8n Instance:
+	•	Ensure your self-hosted n8n instance is running and accessible. You’ll need admin access to retrieve workflows.
+	•	Example: If your instance is at http://localhost:5678, confirm it’s active.
+	2.	Configure GitHub Repository:
+	•	Create a new repository on GitHub (e.g., name/n8n-workflow-backup) to store your backups.
+	•	Generate a GitHub OAuth2 token with repo scope and save it for later use.
+	3.	Import the Workflow into n8n:
+	•	Copy the provided JSON workflow data and import it into your n8n instance via the workflow editor.
+	•	Example: Paste the JSON into the “Import from JSON” option in n8n.
+	4.	Update Credentials:
+	•	In the workflow, locate the List files from repository [GITHUB], Update file [GITHUB], and Upload file [GITHUB] nodes.
+	•	Add your GitHub OAuth2 credentials (named “GitHub account” in the workflow).
+	•	For the Retrieve workflows [N8N] node, add your n8n API credentials (named “n8n account”) pointing to your instance.
+	•	Example: Set the owner field to https://github.com/name and the repository to n8n-workflow-backup.
+	5.	Adjust Settings (Optional):
+	•	Modify the Set date and Format date nodes if you prefer a different date format (e.g., yyyy-MM-dd instead of dd-MM-yyyy/H:mm).
+	•	Change the Move JSON to binary node’s filename pattern if needed (e.g., add a prefix like backup-).
+	6.	Test the Workflow:
+	•	Activate the workflow in n8n.
+	•	Manually trigger it using the Execute workflow node to ensure it runs without errors.
+	•	Example: After triggering, check your GitHub repo for a new file like marketing-campaign-123.json.
+	7.	Schedule Regular Backups (Optional):
+	•	Replace the Execute workflow node with a Schedule trigger node from n8n’s core nodes.
+	•	Set a schedule (e.g., daily at 2 AM) to automate backups.
+	8.	Verify and Maintain:
+	•	After each run, verify files appear in your GitHub repo with commit messages like backup-12-07-2023/14:18.
+	•	Periodically check the workflow logs in n8n to ensure it’s functioning.

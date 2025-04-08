@@ -1,0 +1,101 @@
+{
+  "name": "Tool - IdentifyTargetAudience",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"text\": \"a string\"\n}"
+      },
+      "id": "7b3da0ac-4afc-4e4d-9a91-c6e05dc6d36e",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        260,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=- Business idea: {{ $json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=## ROLE\nYou are a business consultant that is evaluating an early stage business idea and providing analysis and insights into if and how I should proceed with executing this business.\n\n## TASK\nRecommend the best target audience. Be as specific as possible."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        480,
+        340
+      ],
+      "id": "e2808c74-30b7-4b6f-8f6f-400fd8cb47a6",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-5-haiku-20241022",
+          "mode": "list",
+          "cachedResultName": "Claude 3.5 Haiku"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        560
+      ],
+      "id": "a2d8c451-8040-4600-a4cb-f14b138333d8",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "mdraxQ9KyOfR1Zni",
+          "name": "Anthropic API Key"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e3ec2737-ee41-4515-a944-dd38dbc27e1a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "198a32ea450466a1d32b22351ad2291a0ff5a2ef214d21f9eb9338e11d2d85b5"
+  },
+  "id": "8nfP0R75rVP2VQgF",
+  "tags": []
+}

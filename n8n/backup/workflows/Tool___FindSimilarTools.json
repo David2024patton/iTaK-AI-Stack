@@ -1,0 +1,101 @@
+{
+  "name": "Tool - FindSimilarTools",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"text\": \"a string\"\n}"
+      },
+      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        260,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=- Business idea: {{ $json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=## ROLE\nYou are a business consultant that is evaluating an early stage business idea and providing analysis and insights into if and how I should proceed with executing this business.\n\n## TASK\nFind a maximum of 5 businesses that sell tools, products or services similar to the business idea provided. For each business, provide the following information:\n1. Name of the tool, product or service.\n2. Name of the business that sells the tool, product or service.\n3. Website URL of the business."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        480,
+        340
+      ],
+      "id": "9f771ad7-1d93-49dd-9d1a-ddfdaad89cd2",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-5-haiku-20241022",
+          "mode": "list",
+          "cachedResultName": "Claude 3.5 Haiku"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        560
+      ],
+      "id": "3d46e8ed-8064-4425-8933-67bb1d7f2014",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "mdraxQ9KyOfR1Zni",
+          "name": "Anthropic API Key"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6435da48-e612-43a2-874b-3e54e98fb8bd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "198a32ea450466a1d32b22351ad2291a0ff5a2ef214d21f9eb9338e11d2d85b5"
+  },
+  "id": "A8tC8sPZ3agTw4oR",
+  "tags": []
+}

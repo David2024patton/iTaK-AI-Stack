@@ -1,0 +1,614 @@
+{
+    "name": "Visual Scraper",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 1723149,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": -199,
+                    "y": -5
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "Vision based"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "regexp:Parser",
+            "version": 1,
+            "parameters": {
+                "global": true,
+                "pattern": "([^,]+)",
+                "multiline": false,
+                "sensitive": true,
+                "singleline": false,
+                "continueWhenNoRes": false,
+                "ignoreInfiniteLoopsWhenGlobal": false
+            },
+            "mapper": {
+                "text": "{{1.Websites}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 46,
+                    "y": 2
+                },
+                "restore": {},
+                "parameters": [
+                    {
+                        "name": "pattern",
+                        "type": "text",
+                        "label": "Pattern",
+                        "required": true
+                    },
+                    {
+                        "name": "global",
+                        "type": "boolean",
+                        "label": "Global match",
+                        "required": true
+                    },
+                    {
+                        "name": "sensitive",
+                        "type": "boolean",
+                        "label": "Case sensitive",
+                        "required": true
+                    },
+                    {
+                        "name": "multiline",
+                        "type": "boolean",
+                        "label": "Multiline",
+                        "required": true
+                    },
+                    {
+                        "name": "singleline",
+                        "type": "boolean",
+                        "label": "Singleline",
+                        "required": true
+                    },
+                    {
+                        "name": "continueWhenNoRes",
+                        "type": "boolean",
+                        "label": "Continue the execution of the route even if the module finds no matches",
+                        "required": true
+                    },
+                    {
+                        "name": "ignoreInfiniteLoopsWhenGlobal",
+                        "type": "boolean",
+                        "label": "Ignore errors when there is an infinite search loop",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "$1",
+                        "type": "text",
+                        "label": "$1"
+                    },
+                    {
+                        "name": "i",
+                        "type": "uinteger",
+                        "label": "i"
+                    },
+                    {
+                        "name": "__IMTMATCH__",
+                        "type": "any",
+                        "label": "Fallback Match"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "dumplingai:screenshot",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 3389613
+            },
+            "mapper": {
+                "url": "{{6.`$1`}}",
+                "wait": "10",
+                "fullPage": false,
+                "viewport": {
+                    "width": "1024",
+                    "height": "1024"
+                },
+                "autoScroll": false,
+                "clipRectangle": {
+                    "width": "1024",
+                    "height": "1024"
+                },
+                "blockCookieBanners": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 343,
+                    "y": -13
+                },
+                "restore": {
+                    "expect": {
+                        "fullPage": {
+                            "mode": "chose"
+                        },
+                        "autoScroll": {
+                            "mode": "chose"
+                        },
+                        "blockCookieBanners": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "dumplingai"
+                            },
+                            "label": "My Dumpling AI connection (Make.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:dumplingai",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "text",
+                        "label": "URL",
+                        "required": true
+                    },
+                    {
+                        "name": "fullPage",
+                        "type": "boolean",
+                        "label": "Screenshot Full Page"
+                    },
+                    {
+                        "name": "autoScroll",
+                        "type": "boolean",
+                        "label": "Auto Scroll",
+                        "required": true
+                    },
+                    {
+                        "name": "blockCookieBanners",
+                        "type": "boolean",
+                        "label": "Block Cookie Banners",
+                        "required": true
+                    },
+                    {
+                        "name": "viewport",
+                        "spec": [
+                            {
+                                "name": "width",
+                                "type": "number"
+                            },
+                            {
+                                "name": "height",
+                                "type": "number"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Viewport"
+                    },
+                    {
+                        "name": "clipRectangle",
+                        "spec": [
+                            {
+                                "name": "top",
+                                "type": "number"
+                            },
+                            {
+                                "name": "left",
+                                "type": "number"
+                            },
+                            {
+                                "name": "width",
+                                "type": "number"
+                            },
+                            {
+                                "name": "height",
+                                "type": "number"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Clip Rectangle"
+                    },
+                    {
+                        "name": "wait",
+                        "type": "number",
+                        "label": "Wait before screenshot"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "openai-gpt-3:analyzeImages",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 2882820
+            },
+            "mapper": {
+                "model": "gpt-4o-mini",
+                "top_p": "1",
+                "images": [
+                    {
+                        "imageUrl": "{{3.screenshotUrl}}",
+                        "imageUploadType": "url"
+                    }
+                ],
+                "prompt": "# **Role:**\n\nYou are a Professional Marketing Analyst specializing in visual and branding analysis.\n\n---\n\n# **Task:**\n\nConduct a factual analysis of a competitor's homepage based on a provided screenshot, focusing on branding, copy, and visual elements.\n\n---\n\n# **Context:**\n\nYou will analyze a screenshot of a competitor's homepage. The objective is to produce a concise, fact-based report that evaluates the branding, copy, and visual design elements. This report should focus on the observable characteristics without subjective opinions.\n\n---\n\n# **Specifics:**\n\n- Make sure to mention the company's name as the header of your report\n\nYour analysis should include the following 3 sections:\n\n### 1. **Branding:**\n\n   - **Visual Identity:** Describe the color scheme, logo placement, and overall visual consistency. Note any specific branding elements like taglines, slogans, or distinctive patterns.\n   - **Brand Elements:** Identify any unique brand elements, such as mascots, symbols, or recurring motifs used throughout the homepage.\n   \n### 2. **Copy:**\n\n   - **Key Messages:** Summarize the main headlines, subheadings, and any prominent calls-to-action (CTAs). List the primary messaging conveyed by the text.\n   - **Textual Content:** Provide details on the volume and placement of text, such as whether the copy is brief or detailed, and how it is organized across the homepage.\n   \n### 3. **Visual Elements:**\n\n   - **Imagery & Graphics:** List the types of images, icons, and graphics used. Note the style (e.g., photography, illustration) and their relevance to the content.\n   - **Layout & Design:** Describe the page layout, including the structure, navigation elements, and any notable design features like banners, buttons, or interactive elements.\n\n---\n\n# **Example:**\n\n# Hubspot Homepage Analysis\n\n## 1. Branding\n\n- **Visual Identity:** The homepage features a color palette dominated by dark blue and white, with the company logo prominently placed in the top-left corner. The use of consistent fonts and colors across headings and CTAs reinforces the brand identity.\n  \n- **Brand Elements:** The homepage incorporates a recurring geometric pattern in the background, which aligns with the brand’s modern, tech-focused image.\n\n## 2. Copy\n\n- **Key Messages:** The main headline states, \"Innovate Your Business Today,\" followed by subheadings that detail the company’s services in AI-driven solutions. CTAs such as \"Get Started\" and \"Learn More\" are positioned below each service description.\n  \n- **Textual Content:** The homepage features concise, bullet-pointed text sections with minimal paragraph content, focusing on delivering key messages quickly. The copy is organized into sections that highlight different services.\n\n## 3. Visual Elements\n\n- **Imagery & Graphics:** The homepage uses high-resolution images of business professionals in tech environments. Icons representing various services are placed alongside brief descriptions. The style is consistent, with a focus on professional, corporate imagery.\n  \n- **Layout & Design:** The layout is grid-based, with clear navigation at the top. Interactive buttons are placed strategically for easy access to more detailed information. The design includes a large hero banner at the top, followed by neatly organized content blocks.\n\n---\n\n# The Homepage screenshot you have to analyze today:\n{{3.screenshotUrl}}\n\n",
+                "max_tokens": "300",
+                "temperature": "1",
+                "n_completions": "1"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 664,
+                    "y": -3
+                },
+                "restore": {
+                    "expect": {
+                        "model": {
+                            "mode": "chose",
+                            "label": "gpt-4o-mini"
+                        },
+                        "images": {
+                            "mode": "chose",
+                            "items": [
+                                {
+                                    "imageUploadType": {
+                                        "mode": "chose",
+                                        "label": "Image URL"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "openai-gpt-3"
+                            },
+                            "label": "My OpenAI connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:openai-gpt-3",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "prompt",
+                        "type": "text",
+                        "label": "Prompt",
+                        "required": true
+                    },
+                    {
+                        "name": "images",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "imageUploadType",
+                                    "type": "select",
+                                    "label": "How would you like to specify an image?",
+                                    "options": [
+                                        {
+                                            "label": "Image URL",
+                                            "value": "url",
+                                            "nested": [
+                                                {
+                                                    "help": "Public URL of the image. For example, `https://getmyimage.com/myimage.png`.",
+                                                    "mode": "edit",
+                                                    "name": "imageUrl",
+                                                    "type": "url",
+                                                    "label": "Image URL",
+                                                    "mappable": {
+                                                        "help": "Public URL of the image. For example, `https://getmyimage.com/myimage.png`."
+                                                    },
+                                                    "required": true
+                                                }
+                                            ],
+                                            "default": true
+                                        },
+                                        {
+                                            "label": "Image File",
+                                            "value": "imageFile",
+                                            "nested": [
+                                                {
+                                                    "help": "Binary data of the image. For example, you can retrieve the binary data of your image using the __HTTP: Get a file__ module.",
+                                                    "name": "imageFileData",
+                                                    "type": "buffer",
+                                                    "label": "Image File",
+                                                    "required": true,
+                                                    "semantic": "file:data"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "required": true
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Image"
+                        },
+                        "type": "array",
+                        "label": "Images",
+                        "required": true
+                    },
+                    {
+                        "name": "model",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    },
+                    {
+                        "name": "max_tokens",
+                        "type": "number",
+                        "label": "Max Tokens"
+                    },
+                    {
+                        "name": "temperature",
+                        "type": "number",
+                        "label": "Temperature",
+                        "validate": {
+                            "max": 2,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "top_p",
+                        "type": "number",
+                        "label": "Top P",
+                        "validate": {
+                            "max": 1,
+                            "min": 0
+                        }
+                    },
+                    {
+                        "name": "n_completions",
+                        "type": "number",
+                        "label": "Number"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 7,
+            "module": "util:TextAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 5,
+                "rowSeparator": "\n"
+            },
+            "mapper": {
+                "value": "Result:\n\n{{5.result}}\n\n---\n"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 964,
+                    "y": -3
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "OpenAI (ChatGPT, Whisper, DALL-E) - Analyze Images (Vision) [5]"
+                        }
+                    },
+                    "parameters": {
+                        "rowSeparator": {
+                            "label": "New row"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "rowSeparator",
+                        "type": "select",
+                        "label": "Row separator",
+                        "validate": {
+                            "enum": [
+                                "\n",
+                                "\t",
+                                "other"
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "value",
+                        "type": "text",
+                        "label": "Text"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 8,
+            "module": "util:TextAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 6,
+                "rowSeparator": ""
+            },
+            "mapper": {
+                "value": "{{7.text}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1264,
+                    "y": -3
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "Text parser - Match pattern [6]"
+                        }
+                    },
+                    "parameters": {
+                        "rowSeparator": {
+                            "label": "Empty"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "rowSeparator",
+                        "type": "select",
+                        "label": "Row separator",
+                        "validate": {
+                            "enum": [
+                                "\n",
+                                "\t",
+                                "other"
+                            ]
+                        }
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "value",
+                        "type": "text",
+                        "label": "Text"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 9,
+            "module": "gateway:WebhookRespond",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "body": "{{8.text}}",
+                "status": "200",
+                "headers": []
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1564,
+                    "y": -3
+                },
+                "restore": {
+                    "expect": {
+                        "headers": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "status",
+                        "type": "uinteger",
+                        "label": "Status",
+                        "required": true,
+                        "validate": {
+                            "min": 100
+                        }
+                    },
+                    {
+                        "name": "body",
+                        "type": "any",
+                        "label": "Body"
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true,
+                                "validate": {
+                                    "max": 256
+                                }
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true,
+                                "validate": {
+                                    "max": 4096
+                                }
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Custom headers",
+                        "validate": {
+                            "maxItems": 16
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}

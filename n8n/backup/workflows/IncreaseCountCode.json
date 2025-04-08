@@ -1,0 +1,26 @@
+// This code should be placed in an n8n code node
+
+// Get the input items
+const items = $input.all();
+
+// Process each item in the array
+return items.map(item => {
+  // Create a new value for the count field
+  let newCount = 1;
+  
+  // If there's an existing counter value, use it as a base
+  if (item.json && item.json.counter !== undefined) {
+    newCount = item.json.counter + 1;
+  }
+  
+  // Ensure json property exists
+  if (!item.json) {
+    item.json = {};
+  }
+  
+  // Set the value to the new field name "count"
+  item.json.count = newCount;
+  
+  // Return the modified item
+  return item;
+});

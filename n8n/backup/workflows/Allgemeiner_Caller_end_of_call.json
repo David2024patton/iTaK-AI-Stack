@@ -1,0 +1,75 @@
+{
+  "name": "Allgemeiner Caller end_of_call",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "e9100a5b-f39e-40c7-a45c-3247cf4d1c4e",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        -140
+      ],
+      "id": "8465cd9b-d72c-4e7b-9a0f-0eb4e429c436",
+      "name": "Webhook",
+      "webhookId": "e9100a5b-f39e-40c7-a45c-3247cf4d1c4e"
+    },
+    {
+      "parameters": {
+        "chatId": "{{deine chatid}}",
+        "text": "={{ $json.body.message.analysis.summary }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -400,
+        -140
+      ],
+      "id": "af674b1e-0060-4d96-87f1-3b6d6f05c8a8",
+      "name": "Telegram",
+      "webhookId": "a109e42c-33cc-4d1b-bde2-c4407783fa6a",
+      "credentials": {
+        "telegramApi": {
+          "id": "6FglBIt5ziyIT27d",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a01a0d15-07d5-4921-a60a-88da1558fdb9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4859b1835e199ab2a6c3412de22db564b818e1d0ef1418c63000d7155a3647fd"
+  },
+  "id": "aWXHgLH2JMP7Jg0C",
+  "tags": [
+    {
+      "createdAt": "2025-03-25T13:49:56.303Z",
+      "updatedAt": "2025-03-25T13:49:56.303Z",
+      "id": "vuaT1IHvTApv5ScR",
+      "name": "KI Caller"
+    }
+  ]
+}

@@ -1,0 +1,707 @@
+{
+    "name": "Get X posts",
+    "flow": [
+        {
+            "id": 2,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 1712922,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": -793,
+                    "y": -12
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "Scrape linkedin"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "hook",
+                        "type": "hook:gateway-webhook",
+                        "label": "Webhook",
+                        "required": true
+                    },
+                    {
+                        "name": "maxResults",
+                        "type": "number",
+                        "label": "Maximum number of results"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 18,
+            "module": "regexp:AdvancedParser",
+            "version": 1,
+            "parameters": {
+                "global": true,
+                "multiline": true,
+                "sensitive": true,
+                "singleline": false,
+                "advancedParser": true,
+                "continueWhenNoRes": false,
+                "ignoreInfiniteLoopsWhenGlobal": false
+            },
+            "mapper": {
+                "text": "{{2.`twitter posts`}}",
+                "pattern": "https:\\/\\/x\\.com\\/[A-Za-z0-9_]+"
+            },
+            "metadata": {
+                "designer": {
+                    "x": -493,
+                    "y": -12
+                },
+                "restore": {},
+                "parameters": [
+                    {
+                        "name": "global",
+                        "type": "boolean",
+                        "label": "Global match",
+                        "required": true
+                    },
+                    {
+                        "name": "sensitive",
+                        "type": "boolean",
+                        "label": "Case sensitive",
+                        "required": true
+                    },
+                    {
+                        "name": "multiline",
+                        "type": "boolean",
+                        "label": "Multiline",
+                        "required": true
+                    },
+                    {
+                        "name": "singleline",
+                        "type": "boolean",
+                        "label": "Singleline",
+                        "required": true
+                    },
+                    {
+                        "name": "continueWhenNoRes",
+                        "type": "boolean",
+                        "label": "Continue the execution of the route even if the module finds no matches",
+                        "required": true
+                    },
+                    {
+                        "name": "advancedParser",
+                        "type": "hidden"
+                    },
+                    {
+                        "name": "ignoreInfiniteLoopsWhenGlobal",
+                        "type": "boolean",
+                        "label": "Ignore errors when there is an infinite search loop",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "pattern",
+                        "type": "text",
+                        "label": "Pattern",
+                        "required": true
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 21,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 18
+            },
+            "mapper": {
+                "__IMTMATCH__": "{{18.`__IMTMATCH__`}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": -250,
+                    "y": -9
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "Text parser - Match pattern (Advanced) [18]"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 22,
+            "module": "google-sheets:addMultipleRows",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2417312
+            },
+            "mapper": {
+                "rows": "{{21.array}}",
+                "sheetId": "Sheet1",
+                "correctRange": false,
+                "spreadsheetId": "1pLCOjxiEmDuXCcV7_ZrNATTMTZLqjpaWA9CzuCpdXBs",
+                "tableFirstRow": "A1:Z1",
+                "insertDataOption": "INSERT_ROWS",
+                "valueInputOption": "USER_ENTERED",
+                "insertUnformatted": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 12,
+                    "y": -7
+                },
+                "restore": {
+                    "expect": {
+                        "rows": {
+                            "mode": "edit"
+                        },
+                        "sheetId": {
+                            "mode": "chose",
+                            "label": "Sheet1"
+                        },
+                        "tableFirstRow": {
+                            "label": "A-Z"
+                        },
+                        "insertDataOption": {
+                            "mode": "chose",
+                            "label": "Insert rows"
+                        },
+                        "valueInputOption": {
+                            "mode": "chose",
+                            "label": "User entered"
+                        },
+                        "insertUnformatted": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "google"
+                            },
+                            "label": "My Google connection (oskar@forcefactory-ai.com)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:google",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "spreadsheetId",
+                        "type": "text",
+                        "label": "Spreadsheet ID",
+                        "required": true
+                    },
+                    {
+                        "name": "insertUnformatted",
+                        "type": "boolean",
+                        "label": "Unformatted",
+                        "required": true
+                    },
+                    {
+                        "name": "valueInputOption",
+                        "type": "select",
+                        "label": "Value input option"
+                    },
+                    {
+                        "name": "insertDataOption",
+                        "type": "select",
+                        "label": "Insert data option"
+                    },
+                    {
+                        "name": "correctRange",
+                        "type": "boolean",
+                        "label": "Correct Updated Range (Temporary field)",
+                        "required": true
+                    },
+                    {
+                        "mode": "edit",
+                        "name": "sheetId",
+                        "type": "select",
+                        "label": "Sheet Name",
+                        "required": true
+                    },
+                    {
+                        "name": "tableFirstRow",
+                        "type": "select",
+                        "label": "Column range",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "A1:Z1",
+                                "A1:BZ1",
+                                "A1:CZ1",
+                                "A1:DZ1",
+                                "A1:MZ1",
+                                "A1:ZZ1"
+                            ]
+                        }
+                    },
+                    {
+                        "mode": "edit",
+                        "name": "rows",
+                        "spec": {
+                            "name": "value",
+                            "spec": [
+                                {
+                                    "name": "values",
+                                    "spec": {
+                                        "type": "text",
+                                        "label": "Column"
+                                    },
+                                    "type": "array",
+                                    "label": "Values",
+                                    "labels": {
+                                        "add": "Add value"
+                                    }
+                                }
+                            ],
+                            "type": "collection",
+                            "label": "Row"
+                        },
+                        "type": "array",
+                        "label": "Rows"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 3,
+            "module": "phantombuster:lauchAPhantom",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 3390435
+            },
+            "mapper": {
+                "phantom": "1988473796489665"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 281,
+                    "y": 2
+                },
+                "restore": {
+                    "expect": {
+                        "phantom": {
+                            "mode": "chose",
+                            "label": "Untitled Twitter Tweet Extractor",
+                            "nested": []
+                        },
+                        "menualLaunch": {
+                            "mode": "chose"
+                        },
+                        "saveArgument": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "phantombuster"
+                            },
+                            "label": "My PhantomBuster connection (Ben 's workspace)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:phantombuster",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "phantom",
+                        "type": "select",
+                        "label": "Phantom ID",
+                        "required": true
+                    },
+                    {
+                        "name": "saveArgument",
+                        "type": "boolean",
+                        "label": "Save Argument"
+                    },
+                    {
+                        "name": "menualLaunch",
+                        "type": "boolean",
+                        "label": "Menual Launch"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 10,
+            "module": "util:FunctionSleep",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "duration": "40"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 513,
+                    "y": 10
+                },
+                "restore": {},
+                "expect": [
+                    {
+                        "name": "duration",
+                        "type": "uinteger",
+                        "label": "Delay",
+                        "required": true,
+                        "validate": {
+                            "max": 300,
+                            "min": 1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "phantombuster:getAnOutput",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 3390435
+            },
+            "mapper": {
+                "phantom": "1988473796489665"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 750,
+                    "y": 4
+                },
+                "restore": {
+                    "expect": {
+                        "phantom": {
+                            "mode": "chose",
+                            "label": "Untitled Twitter Tweet Extractor"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "phantombuster"
+                            },
+                            "label": "My PhantomBuster connection (Ben 's workspace)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:phantombuster",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "mode": "edit",
+                        "name": "phantom",
+                        "type": "select",
+                        "label": "Phantom ID",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "phantombuster:getAResultOfContainer",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 3390435
+            },
+            "mapper": {
+                "select": "map",
+                "container": "{{4.containerId}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1012,
+                    "y": -3
+                },
+                "restore": {
+                    "expect": {
+                        "select": {
+                            "label": "By entering manually"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "phantombuster"
+                            },
+                            "label": "My PhantomBuster connection (Ben 's workspace)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:phantombuster",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Get a Result of Container",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "list"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "container",
+                        "type": "text",
+                        "label": "Container ID",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "json:ParseJSON",
+            "version": 1,
+            "parameters": {
+                "type": ""
+            },
+            "mapper": {
+                "json": "{{5.data}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1264,
+                    "y": 2
+                },
+                "restore": {
+                    "parameters": {
+                        "type": {
+                            "label": "Choose a data structure"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "type",
+                        "type": "udt",
+                        "label": "Data structure"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "json",
+                        "type": "text",
+                        "label": "JSON string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "json:ParseJSON",
+            "version": 1,
+            "parameters": {
+                "type": ""
+            },
+            "mapper": {
+                "json": "{{6.resultObject}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "type": {
+                            "label": "Choose a data structure"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "type",
+                        "type": "udt",
+                        "label": "Data structure"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "json",
+                        "type": "text",
+                        "label": "JSON string",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 7
+            },
+            "mapper": {
+                "text": "{{7.text}}",
+                "likeCount": "{{7.likeCount}}",
+                "tweetDate": "{{7.tweetDate}}",
+                "tweetLink": "{{7.tweetLink}}",
+                "profileUser": "{{7.profileUser}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1789,
+                    "y": -1
+                },
+                "restore": {
+                    "extra": {
+                        "feeder": {
+                            "label": "JSON - Parse JSON [7]"
+                        },
+                        "target": {
+                            "label": "Custom"
+                        }
+                    }
+                },
+                "advanced": true
+            },
+            "flags": {
+                "groupBy": "tweets"
+            }
+        },
+        {
+            "id": 9,
+            "module": "gateway:WebhookRespond",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "body": "{{8.array}}",
+                "status": "200",
+                "headers": []
+            },
+            "metadata": {
+                "designer": {
+                    "x": 2055,
+                    "y": 1
+                },
+                "restore": {
+                    "expect": {
+                        "headers": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "status",
+                        "type": "uinteger",
+                        "label": "Status",
+                        "required": true,
+                        "validate": {
+                            "min": 100
+                        }
+                    },
+                    {
+                        "name": "body",
+                        "type": "any",
+                        "label": "Body"
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key",
+                                "required": true,
+                                "validate": {
+                                    "max": 256
+                                }
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value",
+                                "required": true,
+                                "validate": {
+                                    "max": 4096
+                                }
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Custom headers",
+                        "validate": {
+                            "maxItems": 16
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us1.make.com"
+    }
+}

@@ -1,0 +1,199 @@
+{
+  "name": "IA Proposal Generator System copy",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Sales Call Logging Form",
+        "formDescription": "This form logs a sales call & automatically generates a proposal.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "First Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Last Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Company Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "Website",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Projeto",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Cost",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        0
+      ],
+      "id": "b18e801a-e04e-4bdd-a1c2-f772d319646a",
+      "name": "On form submission",
+      "webhookId": "a8cf1786-3349-4b41-96f4-a88f6c847e3a"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Voce é um especialista em IA Automation e sabe tudo sobre criar workflows usando N8N. ",
+              "role": "system"
+            },
+            {
+              "content": "=Sua tarefa é criar propostas de projetos baseado nas informaçoes que voce recebe dos clientes, que estará abaixo em <Projeto>. Voce tem o superpoder de, a partir dos dados do <Projeto> enviados pelo cliente, entender exatamente o que precisa ser feito e criar uma proposta. Voce deve seguir o <template> abaixo e alterar os dados para o projeto em questao.\n\n<template>\n\n#Sistema Inteligente de Gestión de Prospectos para {{ $json['Company Name'] }}\n\n##Esta propuesta contiene todos los detalles y costos relacionados con el alcance del trabajo, la inversión y los términos solicitados por {{ $json['First Name'] }} {{ $json['Last Name'] }}.\n\n##Tu proceso de gestión de prospectos necesita optimización\nHola {{ $json['First Name'] }},\nDedique un tiempo a resumir nuestra conversación en una lista de áreas en las que creo que necesitas ayuda. Estas son, en mi opinión, los problemas principales:\n\n###Manejo ineficiente de prospectos\nTu proceso actual de gestión de prospectos puede estar causando oportunidades perdidas e ineficiencias. Sin un sistema optimizado, los prospectos valiosos podrían estar perdiéndose en el proceso, lo que podría costarle a {{ $json['Company Name'] }} ingresos significativos.\n\n###Falta de automatización\nComo empresa de automatización con IA, es fundamental que tus procesos internos reflejen las soluciones de vanguardia que ofreces a tus clientes. La gestión manual de prospectos contradice la competencia principal de tu empresa y podría estar afectando la productividad de tu equipo.\n\n###Seguimientos inconsistentes\nSin un enfoque sistemático para la gestión de prospectos, los seguimientos pueden ser inconsistentes o incluso pasados por alto por completo. Esto puede resultar en ventas perdidas y dañar la reputación de tu empresa en cuanto a atención y profesionalismo.\n\nLas siguientes páginas incluyen detalles adicionales que cubren todo el alcance del proyecto que discutimos anteriormente, incluidos los costos de inversión.\n\nAvísame si tienes alguna pregunta escribiéndome a info@iaoperators.com.\n\nGracias,\nLuiz\n\n##Sistema de Gestión de Prospectos Potenciado por IA\n\nMi solución propuesta a los problemas anteriores es la siguiente:\n\n###Implementar un sistema inteligente de puntuación de prospectos:\nDesarrollaremos un sistema de puntuación de prospectos impulsado por inteligencia artificial que evalúa y prioriza automáticamente los prospectos según su probabilidad de conversión. Esto garantizará que tu equipo de ventas se enfoque en las oportunidades más prometedoras, maximizando la eficiencia y las tasas de conversión.\n\n###Crear flujos de nutrición de prospectos automatizados:\nDiseñaremos e implementaremos flujos de trabajo automatizados que entregan contenido y comunicaciones personalizadas a los prospectos según su comportamiento e intereses. Esto mantendrá a los clientes potenciales comprometidos durante todo el ciclo de ventas, aumentando las posibilidades de conversión.\n\n###Desarrollar un panel centralizado de gestión de prospectos:\nCrearemos un panel integral que proporcione información en tiempo real sobre tu canal de prospectos, el rendimiento del equipo de ventas y métricas clave. Esto permitirá tomar decisiones basadas en datos y ayudará a identificar áreas de mejora en tu proceso de ventas.\n\n##Alcance del trabajo\nIA Operators creará un sistema automatizado que cumplirá con lo siguiente:\n\nAnalizaremos tu proceso actual de gestión de prospectos e identificaremos áreas de mejora.\n\nDesarrollaremos e implementaremos un sistema de puntuación de prospectos impulsado por IA adaptado a las necesidades de tu negocio.\n\nCrearemos flujos de nutrición de prospectos automatizados para involucrar y convertir clientes potenciales de manera más efectiva.\n\nDiseñaremos y construiremos un panel centralizado de gestión de prospectos con información en tiempo real.\n\nIntegraremos el nuevo sistema con tu CRM y herramientas de ventas existentes.\n\nAdoptando un enfoque disciplinado, podemos garantizar la entrega del proyecto según lo especificado.\n\n##Cronograma\nMi cronograma propuesto es pragmático y toma en cuenta la experiencia previa en el diseño y construcción de sistemas similares.\n\n###Análisis y planificación: 3 días hábiles\n###Desarrollo e implementación: 5 días hábiles\n###Pruebas y ajustes: 1 día hábil\n###Capacitación y entrega: 1 día hábil\n\nSiempre me esfuerzo por entregar los proyectos antes del plazo establecido. Este cronograma me dará la autonomía necesaria para asegurar que dedico a cada etapa el tiempo y la energía que merece.\n\n\n##Tu inversión\nNota: este es un paquete en dos etapas con un depósito del 50% y el saldo restante a pagar en la entrega.\nLa “entrega” se define como el cumplimiento de las condiciones descritas en el alcance del trabajo, y el pago final solo se realiza cuando estés completamente satisfecho con el proyecto.\n\n| Nombre                                                   | Precio     | Cant. | Subtotal  |\n|----------------------------------------------------------|------------|-------|-----------|\n| Sistema Inteligente de Gestión de Prospectos para LeftClick | ${{ $json.Cost }} | 1     | ${{ $json.Cost }} |\n\nInversión total: ${{ $json.Cost }}\n50% por adelantado: -$xxx\nA pagar al firmar: $xxx\n\n##Términos y condiciones\n\nIA Operators construirá un sistema automatizado para test de acuerdo con la descripción detallada en esta propuesta y conforme al Contrato de Servicios adjunto (ver abajo). El Contrato de Servicios protege tu confidencialidad e incluye una cláusula de confidencialidad que agiliza el intercambio de información.\n\nCaracterísticas adicionales, extensiones u otras integraciones fuera de los requisitos listados pueden afectar el cronograma y los costos establecidos anteriormente. Si tienes alguna pregunta o comentario, escribe a info@iaoperators.com\n\nAl firmar a continuación, ambas partes indican su aceptación de esta propuesta y del Contrato de Servicios adjunto, y dan su aprobación para comenzar el trabajo una vez realizado el pago por parte de test.\n\n<template>\n\n<Projeto>\n{{ $json.Projeto }}\n</Projeto>\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.6,
+      "position": [
+        300,
+        0
+      ],
+      "id": "9d1a013b-c38d-499d-9374-a3f589718da1",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "i3h3yVb6UrrlvOnQ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('OpenAI1').item.json.message.content }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ],
+      "id": "7c866de8-a983-4e3a-80bd-92cf45b330fa",
+      "name": "Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "KNmmi1rV2LoDbZDc",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "1IFHYZ2k6uI-ZUpex5vkjkyij36yfY_GG",
+        "title": "={{ $('On form submission').item.json['Company Name'] }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "5ee7bf1f-0588-4034-addb-f74211b02f40",
+      "name": "Google Docs1",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "KNmmi1rV2LoDbZDc",
+          "name": "Google Docs account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Google Docs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs": {
+      "main": [
+        []
+      ]
+    },
+    "Google Docs1": {
+      "main": [
+        [
+          {
+            "node": "Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "86b14103-1c82-49c4-9ad5-4a506eee1dcc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "89aaea7429efcdace812bdb269e6198e38f2a22933d6040529200f442c24d7af"
+  },
+  "id": "lIqnpwRdsvpaAYHN",
+  "tags": [
+    {
+      "createdAt": "2025-03-22T14:45:41.661Z",
+      "updatedAt": "2025-03-22T14:45:41.661Z",
+      "id": "iQu4Saw695vZ9Kgt",
+      "name": "Nick Saraev"
+    }
+  ]
+}

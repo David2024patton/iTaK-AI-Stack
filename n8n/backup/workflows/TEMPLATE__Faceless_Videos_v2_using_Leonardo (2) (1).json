@@ -1,0 +1,1272 @@
+{
+  "name": "TEMPLATE: Faceless Videos v2 using Leonardo",
+  "nodes": [
+    {
+      "parameters": {
+        "name": "=faceless-video-audio-{{ $now.toISO() }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1360,
+        160
+      ],
+      "id": "81deb753-46b3-4f2a-8c11-a298d9dc0df3",
+      "name": "Upload Audio to Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "x1XB54x7vBkxGDgI",
+          "name": "personal - GDrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1560,
+        160
+      ],
+      "id": "50c749c5-f679-4bdd-864c-2fd998c52a06",
+      "name": "Make File Public",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "yRzc4Jgcw2TsBMcZ",
+          "name": "scrapes.ai - GDrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1820,
+        0
+      ],
+      "id": "0cecb8c6-6c0b-48e9-b1f7-32f746e03379",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"array\",\n  \"items\": {\n    \"type\": \"object\",\n    \"properties\": {\n      \"start_time\": {\n        \"type\": \"number\"\n      },\n      \"end_time\": {\n        \"type\": \"number\"\n      },\n       \"duration\": {\n        \"type\": \"number\"\n      },\n      \"prompt\": {\n        \"type\": \"string\"\n      }\n    },\n    \"required\": [\"start_time_seconds\", \"end_time_seconds\", \"prompt\"]\n  }\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2220,
+        360
+      ],
+      "id": "5eeb6bc4-0101-4adb-b8e6-ca1033412371",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2840,
+        0
+      ],
+      "id": "c69c8e7d-b34c-4230-8afe-6e28b70818da",
+      "name": "Wait3",
+      "webhookId": "9c33bc28-efda-485d-8f6a-3c53d470f28d"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations-motion-svd",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "imageId",
+              "value": "={{ $json.generations_by_pk.generated_images[0].id }}"
+            },
+            {
+              "name": "motionStrength",
+              "value": 3
+            },
+            {
+              "name": "isPublic",
+              "value": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3200,
+        0
+      ],
+      "id": "7c2b2258-2d16-4a0e-9500-867b72027b52",
+      "name": "Generate Motion1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "r0S1DEo2PA6cOSh7",
+          "name": "Leonardo.ai Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Idea: {{ $json.idea }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Act as a YouTube video scriptwriter, creating engaging and captivating video script that will attract and retain viewers. the script should be 1 minute long run time in speech talking at a medium pace. Consider incorporating elements such as storytelling, relatable content, clear structure, and analogies to encourage audience engagement. write the video script about the topic (VIDEO IDEA) Use your creativity and expertise to produce a high-quality and informative script that will appeal to a wide audience.\nMake sure to use CAPITALS and ! exclamation marks generously when you feel like it.\nOnly output the script text and nothing else."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        420,
+        -20
+      ],
+      "id": "47b084b9-3d30-40b0-831b-488476b6ab6f",
+      "name": "60 Second Script Writer1"
+    },
+    {
+      "parameters": {
+        "content": "## Video Editing",
+        "height": 440,
+        "width": 640,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4080,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "b59faede-af9f-4f51-bd78-454b839e2df9",
+      "name": "Sticky Note22"
+    },
+    {
+      "parameters": {
+        "content": "## Timestamps Generation",
+        "height": 680,
+        "width": 640,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1780,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "1d2bd76f-6e75-4776-976c-0ed0337c63ef",
+      "name": "Sticky Note23"
+    },
+    {
+      "parameters": {
+        "content": "## Images Generation",
+        "height": 320,
+        "width": 680,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2440,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "1e3455e1-497b-4bb6-97a4-8465df9aa7bb",
+      "name": "Sticky Note24"
+    },
+    {
+      "parameters": {
+        "content": "## Images to Video",
+        "height": 440,
+        "width": 900,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3140,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "bb99847b-339d-4f50-9ad1-7c5d3c20f47f",
+      "name": "Sticky Note25"
+    },
+    {
+      "parameters": {
+        "content": "## Script Generation",
+        "height": 440,
+        "width": 540,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        360,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "5cb49580-8fe2-4f16-b41a-2de0d5ed84a5",
+      "name": "Sticky Note29"
+    },
+    {
+      "parameters": {
+        "content": "## Audio Generation",
+        "height": 440,
+        "width": 320,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        920,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "bdd99629-a8cd-42d2-9a5c-bcef5e8389cf",
+      "name": "Sticky Note30"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -20
+      ],
+      "id": "32a5164b-0324-41f1-adeb-6f415882a86b",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "content": "## Upload Audio File\nTo obtain a URL to pass into Leonardo later",
+        "height": 520,
+        "width": 500,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1260,
+        -200
+      ],
+      "typeVersion": 1,
+      "id": "c4ba2164-3007-44ed-9f2e-9db0792fdda1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6b5b5d77-fd3d-497c-82e5-99fc74f53efb",
+              "name": "idea",
+              "value": "the history of ai",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        -20
+      ],
+      "id": "57bba861-9517-4c69-9c36-d0a59a256efa",
+      "name": "Set idea"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "974ee00c-4264-494f-9606-c8b717d1fb09",
+              "name": "text",
+              "value": "={{ $json.text.replace(/(\\r\\n|\\n|\\r)/g, \"\"); }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        740,
+        -20
+      ],
+      "id": "c36ba3a7-3fd9-4d71-9b1c-43e2c350f9cc",
+      "name": "Formatting"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.elevenlabs.io/v1/text-to-speech/j9jfwdrw7BRfcR43Qohk",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "elevenLabsApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "085a39ed-f565-4597-9fb9-4ffbe6c82434",
+      "name": "Generate voice",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1020,
+        -20
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "krRs77rn1P9PPKRN",
+          "name": "Elevenlabs Header Auth"
+        },
+        "elevenLabsApi": {
+          "id": "0GM0v2KmfaKyHbWz",
+          "name": "ElevenLabs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/audio/transcriptions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "timestamp_granularities[]",
+              "value": "word"
+            },
+            {
+              "name": "model",
+              "value": "whisper-1"
+            },
+            {
+              "name": "response_format",
+              "value": "verbose_json"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1460,
+        -120
+      ],
+      "id": "e7318a61-3030-436d-91e3-8a9f7247e69e",
+      "name": "Transcribe audio with OpenAI Whisper",
+      "credentials": {
+        "openAiApi": {
+          "id": "PePOltzEDz7s0kVb",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Imagine you are a image generation prompt producer, create one image prompts for each scene. Each image (therefore scene) should last from 2 to 4 seconds. Make sure to add the start time, end time and duration. Please use 2 numbers after the dot so 2.54-4.22.\n\nMake sure to have scenes spanning the entire video, so don't leave any blank time between scenes.\n\nHere is the video transcript:\n\n{{JSON.stringify($json.words) }}",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        2080,
+        -20
+      ],
+      "id": "19f6c563-e72f-4e6d-a13d-2521759165a7",
+      "name": "Generate Image Prompts"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        180
+      ],
+      "id": "28fb0561-4d1f-48e5-8e49-e32307efdc4d",
+      "name": "Auto-fixing Output Parse"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2500,
+        0
+      ],
+      "id": "e0052e59-997a-49ae-94d8-7f9d2bc0b0d4",
+      "name": "Split Prompts"
+    },
+    {
+      "parameters": {
+        "url": "=https://cloud.leonardo.ai/api/rest/v1/generations/{{ $json.sdGenerationJob.generationId }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3000,
+        0
+      ],
+      "id": "a73e9725-dfde-4065-9bea-006fe6fc3b33",
+      "name": "Get Image Generations",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "r0S1DEo2PA6cOSh7",
+          "name": "Leonardo.ai Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "height",
+              "value": "={{ 1280 }}"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.prompt }}"
+            },
+            {
+              "name": "width",
+              "value": "={{ 720 }}"
+            },
+            {
+              "name": "modelId",
+              "value": "1dd50843-d653-4516-a8e3-f0238ee453ff"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2680,
+        0
+      ],
+      "id": "9bc72725-479b-47dc-ba7f-5dbe60540e0a",
+      "name": "Generate Images Using Leonardo",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "r0S1DEo2PA6cOSh7",
+          "name": "Leonardo.ai Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3360,
+        0
+      ],
+      "id": "ad2cf268-bebe-4e7d-b8b1-5d4342b5d60f",
+      "name": "Wait 5 mins",
+      "webhookId": "2c6c93bb-0dc9-4a79-8ee9-8cafbe89775f"
+    },
+    {
+      "parameters": {
+        "url": "=https://cloud.leonardo.ai/api/rest/v1/generations/{{ $json.motionSvdGenerationJob.generationId }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3560,
+        0
+      ],
+      "id": "f65d8ef4-156c-4229-9393-ac889cdca00a",
+      "name": "Get Motion Generations",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "r0S1DEo2PA6cOSh7",
+          "name": "Leonardo.ai Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.generations_by_pk.generated_images[0].motionMP4URL }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3760,
+        0
+      ],
+      "id": "2128d463-0bb6-43a2-b271-d708fb48e497",
+      "name": "Download Generated Motions"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "list",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        3920,
+        0
+      ],
+      "id": "4bd00447-34d0-4d17-a499-71feda845123",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.shotstack.io/edit/stage/render",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"timeline\": {\n \"soundtrack\":{\n            \"src\":\"{{ $('Upload Audio to Drive').first().json.webContentLink }}\"        \n},\n        \"tracks\": [\n            {\n                \"clips\":{{ JSON.stringify($('Aggregate').first().json.list.map((item, i) => ({\n                    \"asset\": {\n                        \"type\": \"video\",\n                        \"src\": item.generations_by_pk.generated_images[0].motionMP4URL\n                    },\n                    \"start\": $('Generate Image Prompts').first().json.output[i].start_time,\n                    \"length\": 20\n                }))) }}\n            }\n        ]\n    },\n    \"output\": {\n        \"format\": \"mp4\",\n        \"size\": {\n            \"width\": 720,\n            \"height\": 1280\n        }\n    }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4120,
+        0
+      ],
+      "id": "941dd23b-4c87-485a-8d13-b1cbda539c66",
+      "name": "Edit with Shotstack",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "UDdGacdAWSf52VJM",
+          "name": "Shotstack Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        4260,
+        0
+      ],
+      "id": "76e1c977-19bd-4ee4-9ff0-db8c18da1cdb",
+      "name": "Wait 1 min",
+      "webhookId": "12282cce-3a80-4646-84d3-ac3225c18f6d"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.shotstack.io/edit/stage/render/{{ $json.response.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4420,
+        0
+      ],
+      "id": "00367609-64d3-4206-a750-91fdf4d25b40",
+      "name": "Poll Shotstack",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "UDdGacdAWSf52VJM",
+          "name": "Shotstack Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.response.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4580,
+        0
+      ],
+      "id": "0c5e98c4-decf-4786-a65c-6095e69e0b15",
+      "name": "Download Video"
+    },
+    {
+      "parameters": {
+        "content": "## Helper info\n1. Elevenlabs - To get the elevenlabs credential type, install the elevenlabs community node `n8n-nodes-elevenlabs`, or alternatively use a generic Header Auth credential type with the name value `Authorization` and value: Bearer your_api_key (Bearer then space then your api key from elevenlabs)\n\n2. Transcribe audio with OpenAI Whisper - you should use an OpenAI API key here, NOT an openrouter key. The base URL in the credential should be `https://api.openai.com/v1`\n\n3. Leonardo Header Auth - use a generic Header Auth credential type with the name value `Authorization` and value: Bearer your_api_key (Bearer then space then your api key from Leonardo)\n\n4. Shotstack Header Auth - use a generic Header Auth credential type with the name value `x-api-key` and value: Bearer your_api_key (Bearer then space then your api key from Shotstack)",
+        "height": 320,
+        "width": 800,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        840,
+        360
+      ],
+      "id": "694a9380-fe8e-4be3-bc10-094e16943038",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.5-sonnet",
+        "options": {
+          "baseURL": "https://openrouter.ai/api/v1"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        480,
+        160
+      ],
+      "id": "fb7747d8-63a1-4a42-b24a-c3e37996f0c8",
+      "name": "Openrouter",
+      "credentials": {
+        "openAiApi": {
+          "id": "fz5YvYfCOdNT4WIc",
+          "name": "OPENROUTER API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-3.5-sonnet",
+        "options": {
+          "baseURL": "https://openrouter.ai/api/v1"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        160
+      ],
+      "id": "b16dcab2-1489-4ef0-bcd7-9b42bfeb046c",
+      "name": "Openrouter1",
+      "credentials": {
+        "openAiApi": {
+          "id": "fz5YvYfCOdNT4WIc",
+          "name": "OPENROUTER API"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Generate Images Using Leonardo": [
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "b5353c9e-13ab-4016-bc36-9837a3990466",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "ed6bc322-c2e7-445e-8665-95c758df3df4",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "b56c33f2-5454-4ff2-acdd-0c5e4e86af43",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "97c2b204-d2ff-4280-8afe-7d50231f3b8e",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "aa47dec8-6983-4144-980e-7f8d23fb45a1",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "250ed21d-6d40-4404-96f9-3bec2ae65c05",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "0f42fa23-1ec9-45fe-a02c-89101a425ae3",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "f1546cc8-7988-45c7-8b97-613df2942467",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "e5a63d67-6f7e-47c5-b6c8-ec6992f729bb",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "839f3f08-1b0f-46ab-8796-b91fac51f1a1",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "8534906c-fb91-4da7-b4af-6c451f06a755",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "4292272e-db49-4c51-aace-9f92958dce4d",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "06517937-0ee9-424a-a5c0-b91b0fe02ad3",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "69f3fd41-916f-4892-99dc-0a4dcf6ed109",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "a8e9968f-3eb8-436a-8dda-e7ece8aac3ea",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "b00d1f72-6f65-4796-a001-3527511c4b95",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "05c5d414-7d1f-4b80-99d5-6e1c2ca48c6e",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "3d6cf308-76e8-4460-a04a-80a7e1e52202",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "a7b684e9-a19a-43cf-94ee-8230316084e6",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "47497a01-6aaa-4284-a6ff-bb2b5d3dc414",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "1e0d40d7-6f7a-412b-b987-6c9acead0733",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "abe058cf-eae3-4fab-9c98-80ef6f8e52fd",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "8f7607eb-f761-49c6-aa76-7f5f279ebde1",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "852a4ec5-b440-4ea0-b38b-b1e47679ead7",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "131a4be3-8d45-4fe5-9158-8777e2b8f4b6",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "a85358ee-1e09-4b6b-8c91-d2a7ba3aad48",
+            "apiCreditCost": 4
+          }
+        }
+      },
+      {
+        "json": {
+          "sdGenerationJob": {
+            "generationId": "c67c3dc6-bcf3-4cdc-9964-2b874a1b0e2e",
+            "apiCreditCost": 4
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Upload Audio to Drive": {
+      "main": [
+        [
+          {
+            "node": "Make File Public",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make File Public": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Generate Image Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parse",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Get Image Generations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Motion1": {
+      "main": [
+        [
+          {
+            "node": "Wait 5 mins",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "60 Second Script Writer1": {
+      "main": [
+        [
+          {
+            "node": "Formatting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set idea": {
+      "main": [
+        [
+          {
+            "node": "60 Second Script Writer1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatting": {
+      "main": [
+        [
+          {
+            "node": "Generate voice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate voice": {
+      "main": [
+        [
+          {
+            "node": "Upload Audio to Drive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Transcribe audio with OpenAI Whisper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe audio with OpenAI Whisper": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Generate Image Prompts": {
+      "main": [
+        [
+          {
+            "node": "Split Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parse": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Image Prompts",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Prompts": {
+      "main": [
+        [
+          {
+            "node": "Generate Images Using Leonardo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image Generations": {
+      "main": [
+        [
+          {
+            "node": "Generate Motion1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Images Using Leonardo": {
+      "main": [
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5 mins": {
+      "main": [
+        [
+          {
+            "node": "Get Motion Generations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Motion Generations": {
+      "main": [
+        [
+          {
+            "node": "Download Generated Motions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Generated Motions": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Edit with Shotstack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit with Shotstack": {
+      "main": [
+        [
+          {
+            "node": "Wait 1 min",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1 min": {
+      "main": [
+        [
+          {
+            "node": "Poll Shotstack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Poll Shotstack": {
+      "main": [
+        [
+          {
+            "node": "Download Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Openrouter": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "60 Second Script Writer1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Openrouter1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Image Prompts",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parse",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0fb2b53d-fb9d-4fa9-8e97-e0db053011bd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6b6a2db47bdf8371d21090c511052883cc9a3f6af5d0d9d567c702d74a18820e"
+  },
+  "id": "dE7A1Dkq4PXGtmfZ",
+  "tags": []
+}

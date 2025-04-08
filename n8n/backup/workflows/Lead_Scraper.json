@@ -1,0 +1,674 @@
+{
+  "name": "Lead Scraper",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        200
+      ],
+      "id": "6ca778ee-0458-4417-94c3-ae374cfd4356",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "1bf42bd2-e074-80bb-9aa9-f0d1f43bb0bd",
+          "mode": "list",
+          "cachedResultName": "Lead Scraper",
+          "cachedResultUrl": "https://www.notion.so/1bf42bd2e07480bb9aa9f0d1f43bb0bd"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        -260,
+        200
+      ],
+      "id": "c2c48ee9-6fa8-44dd-b24e-9b46cf1cda15",
+      "name": "Get Database",
+      "credentials": {
+        "notionApi": {
+          "id": "syhJXvdg5uG2JRFd",
+          "name": "Chepi n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "da059657-1bc1-449c-b072-e35720803f25",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "84cda798-0070-46c1-be22-780c4950780a",
+              "name": "phone",
+              "value": "={{ $json.property_usdl_k }}",
+              "type": "string"
+            },
+            {
+              "id": "654e4d01-71a6-4c8b-9354-88dd97863d63",
+              "name": "website",
+              "value": "={{ $json.property_lcr4fd_href }}",
+              "type": "string"
+            },
+            {
+              "id": "cd48c376-650d-4342-a063-68ec00e6f5ba",
+              "name": "niche",
+              "value": "={{ $json.property_w4_efsd }}",
+              "type": "string"
+            },
+            {
+              "id": "d75c3094-0ef3-4d8d-890a-8eedfe4a28eb",
+              "name": "directions",
+              "value": "={{ $json.property_hfpxzc_href }}",
+              "type": "string"
+            },
+            {
+              "id": "0bddcf8f-00a6-45de-803e-0bf75c39b700",
+              "name": "businessName",
+              "value": "={{ $json.property_q_bf1_pd }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -40,
+        200
+      ],
+      "id": "c245fbc2-87ed-403b-9099-fc44b3194ef1",
+      "name": "Extract Data"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Website|url",
+              "urlValue": "={{ $json.website }}"
+            },
+            {
+              "key": "Niche|rich_text",
+              "textContent": "={{ $json.niche }}"
+            },
+            {
+              "key": "Phone|phone_number",
+              "phoneValue": "={{ $json.phone }}"
+            },
+            {
+              "key": "Location|rich_text",
+              "textContent": "={{ $json.directions }}"
+            },
+            {
+              "key": "Business Name|title",
+              "title": "={{ $('Get Database').item.json.property_q_bf1_pd }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        180,
+        200
+      ],
+      "id": "6997a3ae-f442-4d1b-a8b5-fdb50d5d0ab4",
+      "name": "Push Data",
+      "credentials": {
+        "notionApi": {
+          "id": "syhJXvdg5uG2JRFd",
+          "name": "Chepi n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "525a6f10-a65d-45da-bd39-74f79e9cb13e",
+              "leftValue": "={{ $json.property_website }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        400,
+        200
+      ],
+      "id": "8eb6936c-4a3c-4e75-96e4-3156262223e3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "1bf42bd2-e074-8044-8883-df059933dbc0",
+          "mode": "list",
+          "cachedResultName": "Lead Cleaning",
+          "cachedResultUrl": "https://www.notion.so/1bf42bd2e07480448883df059933dbc0"
+        },
+        "title": "=",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Business Name|title",
+              "title": "={{ $json.name }}"
+            },
+            {
+              "key": "Website|url",
+              "urlValue": "={{ $json.property_website }}"
+            },
+            {
+              "key": "City|rich_text",
+              "textContent": "={{ $json.property_w4_efsd_3 }}"
+            },
+            {
+              "key": "Location|rich_text",
+              "textContent": "={{ $json.property_location }}"
+            },
+            {
+              "key": "Phone|phone_number",
+              "phoneValue": "={{ $json.property_phone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        0
+      ],
+      "id": "74f44529-b7af-40c4-a395-ef692a01bbe9",
+      "name": "Clean Database",
+      "credentials": {
+        "notionApi": {
+          "id": "syhJXvdg5uG2JRFd",
+          "name": "Chepi n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Website|url",
+              "urlValue": "DELETE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        220
+      ],
+      "id": "c09e56c3-b36f-4f23-9659-ba9ec36b8eda",
+      "name": "Mark for Deletion",
+      "credentials": {
+        "notionApi": {
+          "id": "syhJXvdg5uG2JRFd",
+          "name": "Chepi n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## HOW TO USE\nTo use lead scraper you must first go to Google Maps and type the Niche business you want.\n\nThen use the chrome extension: Instant Data Scraper (looks like a pokeball) and download the CSV/Excel file.\n\nImport that into your database and then begin the workflow.\n\nNote: I'm using Notion, but any other database might be connected (sheets, airtable, etc)\n",
+        "height": 260,
+        "width": 440,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -180
+      ],
+      "id": "bef62792-5ebe-4c3c-a429-61f6c4904de2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Cleans the data & filters.\n\nIf database row contains website > gets added to a clean database.\nIf not > marked for deletion from raw database",
+        "width": 420,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -60
+      ],
+      "id": "8c01db98-95cb-4eca-86ec-aa93a0dacdf8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        940,
+        0
+      ],
+      "id": "c277f3f4-0abd-461d-bb01-bf82a25b8c81",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.message.content.baseURL }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "Accept",
+              "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1580,
+        0
+      ],
+      "id": "d1893b80-e791-4848-bb2f-eeadb30a7561",
+      "name": "HTTP Request",
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = items[0].json.data; // HTML content\n\n// Check if it's an SSL error\nif (items[0].json.email === \"SSL ISSUE\") {\n    return [{ json: { \"email\": \"SSL Issue\" } }];\n}\n\n// Check if html is defined\nif (typeof html !== 'string') {\n    console.error(\"HTML content is not a string:\", html);\n    return [{ json: { \"email\": \"Not Found\" } }];\n}\n\n// Improved regex for email addresses\nconst regex = /[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}/g;\n\n// Function to validate email address\nfunction isValidEmail(email) {\n    // Additional validation rules\n    if (\n        // Basic invalid patterns\n        email.includes('//') || \n        email.includes('@.') || \n        email.includes('.@') || \n        email.includes('..') || \n        email.includes('@-') || \n        email.includes('-@') ||\n        \n        // Package and bundle related\n        email.includes('bundle@') || \n        email.includes('@bundle') ||\n        email.match(/@.*\\d+\\.\\d+\\.\\d+/) ||\n        \n        // System/auto-generated email patterns\n        email.match(/^[0-9a-f]{32}@/) || // Hash-like usernames\n        email.match(/^[0-9a-f]{24}@/) ||\n        email.length > 40 || // Extremely long emails\n        email.includes('sentry-next') ||\n        email.includes('wixpress') ||\n        email.includes('no-reply') ||\n        email.includes('noreply') ||\n        email.includes('donotreply') ||\n        email.includes('automated') ||\n        email.includes('system@') ||\n        email.includes('daemon@') ||\n        email.includes('mailer@') ||\n        email.includes('mailbot@')\n    ) {\n        return false;\n    }\n    return true;\n}\n\nconst matches = html.match(regex);\n\nif (matches && matches.length > 0) {\n    // Filter out invalid emails and remove duplicates\n    const uniqueEmails = [...new Set(matches)].filter(isValidEmail);\n    \n    if (uniqueEmails.length === 0) {\n        return [{ json: { \"email\": \"Not Found\" } }];\n    }\n\n    // Priority email patterns\n    const priorityPatterns = [\n        /^contact@/i,\n        /^info@/i,\n        /^hello@/i,\n        /^support@/i,\n        /^enquiries@/i,\n        /^sales@/i,\n        /^office@/i,\n        /^admin@/i,\n        /^marketing@/i\n    ];\n    \n    // First try to find a priority email\n    for (const pattern of priorityPatterns) {\n        const priorityEmail = uniqueEmails.find(email => pattern.test(email));\n        if (priorityEmail) {\n            return [{ json: { \"email\": priorityEmail } }];\n        }\n    }\n    \n    // If no priority email found, return the first valid unique email\n    return [{ json: { \"email\": uniqueEmails[0] } }];\n} else {\n    return [{ json: { \"email\": \"Not Found\" } }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1940,
+        0
+      ],
+      "id": "5a1493ee-8bd2-498f-8dbd-c470c3e16306",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "40e5c554-2044-4a61-a769-dd228e08e09d",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "36a35e90-f599-4bea-a0e5-a349c98fb5e3",
+              "name": "id",
+              "value": "={{ $('Clean Database').item.json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2160,
+        0
+      ],
+      "id": "7c7fe4f9-13b3-4002-a5c8-0074d9fc6eac",
+      "name": "Set email"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "email",
+        "include": "selectedOtherFields",
+        "fieldsToInclude": "id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -380
+      ],
+      "id": "f7c8b42c-fd25-465b-8710-9702a1f0687c",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are a URL normalization assistant. Your task is to convert any input URL into its **standard base URL format** and return the result as JSON.\n\nNormalization Rules: \n1. Ensure the URL starts with 'https://' {add it if missing}.\n2. Remove 'www.' unless its critical for the domain's identity.\n3. Remove everything after the domain (paths, query, strings, fragments).\n4. Preserve subdomains (e.g., 'blog.example.com', 'https://blog.example.com').\n5. Convert the domain part to lowercase\n6. Output the result in JSON format as:\n   {\n     \"baseURL\":\"https://example.com\"\n   }\n\nExamples:\nInput: 'n8n.io/path/page'\nOutput: '{ \"baseURL\": \"https://n8n.io\" }'\n\nInput: 'http://www.Example.COM/query=1'\nOutput: '{ \"baseURL\": \"https://example.com\" }'\n\nreturn **only the JSON object** in the output. No additional text or explanations.\n\nNote: use the input url for this.",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.property_website }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1200,
+        0
+      ],
+      "id": "66f9b8f2-f8a5-4590-a7c5-e469196219cf",
+      "name": "URL Normalizer",
+      "credentials": {
+        "openAiApi": {
+          "id": "CTJROAMgl91MJDEa",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Scraper\nGoes through each website finding the appropriate email",
+        "height": 120,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        -140
+      ],
+      "id": "c625c979-c642-4add-aea8-5a479fda2b9a",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Email Update\nPushes data into database",
+        "height": 80,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        -500
+      ],
+      "id": "d13e17a1-3e4a-410d-ba25-78c74d462552",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "update",
+        "pageId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Email|email",
+              "emailValue": "={{ $json.email }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        1420,
+        -380
+      ],
+      "id": "267718a9-7736-42e1-8331-02b10c21e32a",
+      "name": "Email Push",
+      "credentials": {
+        "notionApi": {
+          "id": "syhJXvdg5uG2JRFd",
+          "name": "Chepi n8n"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Test workflow’": [
+      {
+        "json": {}
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Database": {
+      "main": [
+        [
+          {
+            "node": "Extract Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Data": {
+      "main": [
+        [
+          {
+            "node": "Push Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Push Data": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Clean Database",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark for Deletion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Database": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "URL Normalizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Set email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set email": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Email Push",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL Normalizer": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b866ee9e-a839-4311-8ff8-d9a2c77916f3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bad8d4f4d3873d391936162377da2b4c2ace7a4025e5d525b840ecfbc1c261a7"
+  },
+  "id": "T44rCOrwxsdhGFIg",
+  "tags": [
+    {
+      "createdAt": "2025-02-27T20:45:53.785Z",
+      "updatedAt": "2025-02-27T20:45:53.785Z",
+      "id": "4yWWGBQ0CdhVuR0p",
+      "name": "Database"
+    }
+  ]
+}

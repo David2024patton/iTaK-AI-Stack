@@ -1,0 +1,205 @@
+# Global options
+{
+    # Email used for Let's Encrypt certificate registration
+    email your-email@example.com
+
+    # Log level (debug, info, warn, error, fatal)
+    log {
+        level INFO
+    }
+}
+
+# Main dashboard - only accessible from localhost
+localhost {
+    root * /srv/www
+    file_server browse
+
+    # Reverse proxy for the dashboard
+    handle_path /dashboard* {
+        reverse_proxy dashboard:80
+    }
+
+    # Serve the index page
+    respond /health "OK"
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/localhost.log
+    }
+}
+
+# Welcome page for non-localhost access
+:80 {
+    @localhost {
+        remote_ip 127.0.0.1 ::1
+    }
+    handle @localhost {
+        uri replace / /localhost/
+        reverse_proxy localhost:80
+    }
+
+    handle {
+        root * /srv/welcome
+        file_server
+    }
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/public.log
+    }
+}
+
+# n8n service
+n8n.localhost {
+    # Reverse proxy to n8n
+    reverse_proxy n8n:5678 {
+        # Enable WebSockets
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/n8n.log
+    }
+}
+
+# OpenWebUI service
+openwebui.localhost {
+    # Reverse proxy to OpenWebUI
+    reverse_proxy openwebui:8080 {
+        # Enable WebSockets
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+        header_up Connection "Upgrade"
+        header_up Upgrade {http.request.header.Upgrade}
+    }
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/openwebui.log
+    }
+}
+
+# Ollama service
+ollama.localhost {
+    # Reverse proxy to Ollama
+    reverse_proxy ollama:11434 {
+        # Enable WebSockets
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/ollama.log
+    }
+}
+
+# SearXNG service
+searxng.localhost {
+    # Reverse proxy to SearXNG
+    reverse_proxy searxng:8080 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/searxng.log
+    }
+}
+
+# YouTube Downloader service
+ytdlp.localhost {
+    # Reverse proxy to YouTube Downloader
+    reverse_proxy ytdlp:8081 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/ytdlp.log
+    }
+}
+
+# Web Scraper service
+webscrapyd.localhost {
+    # Reverse proxy to Web Scraper
+    reverse_proxy webscrapyd:5000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/webscrapyd.log
+    }
+}
+
+# Flowise service
+flowise.localhost {
+    # Reverse proxy to Flowise
+    reverse_proxy flowise:3000 {
+        # Enable WebSockets
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+        header_up Connection "Upgrade"
+        header_up Upgrade {http.request.header.Upgrade}
+    }
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/flowise.log
+    }
+}
+
+# Portainer service
+portainer.localhost {
+    # Reverse proxy to Portainer
+    reverse_proxy portainer:9000 {
+        # Enable WebSockets
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+        header_up Connection "Upgrade"
+        header_up Upgrade {http.request.header.Upgrade}
+    }
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/portainer.log
+    }
+}
+
+# Adminer service
+adminer.localhost {
+    # Reverse proxy to Adminer
+    reverse_proxy adminer:8080 {
+        header_up Host {host}
+        header_up X-Real-IP {remote}
+        header_up X-Forwarded-For {remote}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Enable logging
+    log {
+        output file /var/log/caddy/adminer.log
+    }
+}

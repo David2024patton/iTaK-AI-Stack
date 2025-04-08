@@ -1,0 +1,82 @@
+{
+  "name": "Perplexity Research",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Systemprompt"
+            },
+            {
+              "name": "Userprompt"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -640,
+        -200
+      ],
+      "id": "0ca5336b-931f-409d-9e7f-075cb8d574b8",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer (Dein api key)"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-reasoning-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"{{ $json.Systemprompt }}\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"{{ $json.Userprompt }}\"\n    }\n  ],\n  \"max_tokens\": 3000,\n  \"temperature\": 0.7,\n  \"top_p\": 0.9,\n  \"stream\": false,\n  \"presence_penalty\": 0,\n  \"frequency_penalty\": 1,\n  \"web_search_options\": {\n    \"search_context_size\": \"high\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -420,
+        -180
+      ],
+      "id": "d3815917-e583-4230-9734-e142acab2a1a",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1d3eff7f-674e-4202-8d25-73967877de9d",
+  "meta": {
+    "instanceId": "4859b1835e199ab2a6c3412de22db564b818e1d0ef1418c63000d7155a3647fd"
+  },
+  "id": "Zudt7wSbcWRATN1P",
+  "tags": []
+}

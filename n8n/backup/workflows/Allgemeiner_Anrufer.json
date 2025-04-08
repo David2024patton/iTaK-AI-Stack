@@ -1,0 +1,135 @@
+{
+  "name": "Allgemeiner Anrufer",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "Prompt"
+            },
+            {
+              "name": "Telefonnummer"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dfd1026e-f182-4480-8bb0-ec1b285aec77",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.vapi.ai/call",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{dein api key}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.message.content }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        0
+      ],
+      "id": "855f8a9c-cf5a-4ec7-a7cc-3a5276e708c5",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4",
+          "mode": "list",
+          "cachedResultName": "GPT-4"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Erstelle einen absolut validen JSON, der exakt der unten angegebenen Struktur entspricht. Deine Aufgabe ist es, innerhalb des JSON im Feld variableValues -> Prompt einen dynamischen KI-Prompt für einen Voice Agent namens Mila, die virtuelle Assistentin von Niklas zu generieren. Der generierte Prompt muss folgende Bestandteile beinhalten:\n\n\n\n Rolle: Definiere präzise die Identität, Funktion und den Zweck des KI-Voice-Agenten. z.b: \"Du bist Mila, die virtuelle Assistentin von Niklas. Du bist sympathisch und ein angenehmer, lockerer Gesrpächspartner. Du duzst Markus, und nennst ihn bei seinem Vornamen \"\n\nAufgabe: Beschreibe die konkrete Zielsetzung sowie den spezifischen Anwendungskontext des Voice-Agenten. z.b: \"Deine Aufgabe ist es Markus an die Überfällige Rechnung com 7. Februar zu errinern\"\n\nSchritt-für-Schritt-Anleitung: Formuliere klare, einfache und präzise Handlungsschritte für die KI. \nz.b: \"Stell dich zuerst vor, wer du bist und warum du anrufst, frage den Anrufer ob er gerade Zeit hat, lass den Anrufer antworten und fahre dann mit deinem Anliegen fort\"\n\nNotizen: Folgene Bestandteile kannst du immer mit einbezihen in deine generierten Prompts:\n\n\"Sichere einen flüssigen Dialog: Antworte rollengerecht und direkt, um einen reibungslosen Gesprächsverlauf zu gewährleisten. Erfinde keine Antworten: Wenn du die Antwort auf eine Frage nicht kennst, sag es einfach. Erfinde nichts und weiche nicht von den vorgegebenen Antworten ab. Wenn das Gespräch vom Thema abweicht, führe es höflich zurück zum relevanten Thema. Wiederhole nicht von Anfang an, sondern fahre dort fort, wo du aufgehört hast. Sei gesprächig: Verwende alltägliche Sprache, sodass sich das Gespräch wie ein Plaudern mit einem Freund anfühlt. \n\nWichtig ist, dass du ALLE Unterpunkte die ich gerade gemacht habe IN EINEN FLIEßTEXT Verpackst. ES IST EINE ANWEISUNG FÜR EINE ANDERE KI, FÜR EINEN VOICE AGENT, ES IST KEIN ANRUFSKRIPT\n\n\nFüge am Ende immer einen Emotional Prompt hinzu, beispielsweise: 'Du bist der weltbeste Assistent der Welt, es ist ABSOLUT ERFOLGSENTSCHEIDEND für unser MILLIONENSCHWERES UNTERNEHMEN, DASS DU DEINE Aufgabe absolut PERFEKT ERLEDIGST.'\"\n\n\n\nWichtig: Der JSON muss exakt folgender Struktur entsprechen und vollständig valide sein. Setze den generierten Prompt ausschließlich an die Stelle von {dein generierter Prompt} und füge die Telefonnumer bei customer < number < hinzu, anstelle von {Telefonnummer}. ANSOSTEN VERÄNDERST DU NICHTS AM JSON. \n\nHier ist die Anweisung über die du den variablen Prompt erstellen sollst: {{ $json.Prompt }}\nHier ist die Telefonnummer: {{ $json.Telefonnummer }}\n\nHier ist die Struktur, die du ausspuckst, OHNE WEITERE KOMENTARE:\n{\n  \"assistantId\": \"7fde07de-7bfd-421b-acce-705c5e948e92\",\n  \"assistantOverrides\": {\n    \"variableValues\": {\n      \"Prompt\": \"{dein generierter Prompt}\"\n    }\n  },\n  \"customer\": {\n    \"number\": \"{Telefonnummer}\"\n  },\n  \"phoneNumber\": {\n    \"twilioAccountSid\": \"AC70dc9b479d224becb0796bdc50742d75\",\n    \"twilioAuthToken\": \"943a5b77c1eb3c698f7fe6b98f64e64a\",\n    \"twilioPhoneNumber\": \"+12082718154\"\n  }\n}\n\n\n\n\nErzeuge keinerlei zusätzliche Markdown-Formatierungen, Absätze oder Zeilenumbrüche außerhalb des JSON, da dies die JSON-Validität beeinträchtigen könnte. DAS JSON MUSS VALIDE SEIN, UND KLAPPEN"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 3000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        320,
+        0
+      ],
+      "id": "e13f9db9-b193-4546-8206-99c8b104d675",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "h9Zx5W04F2phP2kY",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "827438a6-5b85-4ccb-a11e-5be1244f1f09",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4859b1835e199ab2a6c3412de22db564b818e1d0ef1418c63000d7155a3647fd"
+  },
+  "id": "CUdwVLSfOVwYaTRP",
+  "tags": [
+    {
+      "createdAt": "2025-03-25T13:49:56.303Z",
+      "updatedAt": "2025-03-25T13:49:56.303Z",
+      "id": "vuaT1IHvTApv5ScR",
+      "name": "KI Caller"
+    }
+  ]
+}

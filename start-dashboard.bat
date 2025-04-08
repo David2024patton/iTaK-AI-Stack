@@ -1,0 +1,3 @@
+@echo off
+echo Starting AI Stack Dashboard...
+powershell -Command "Start-Process cmd -ArgumentList '/c npm install && node server.js' -Verb RunAs"

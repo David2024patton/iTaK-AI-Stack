@@ -1,0 +1,92 @@
+{
+  "name": "termin_reminder_assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "name"
+            },
+            {
+              "name": "termin"
+            },
+            {
+              "name": "telefonnummer"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2c30a435-fe7a-4316-99a9-2950ff47194e",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.vapi.ai/call",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{dein api_key}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"assistantId\": \"58726c35-3dbf-4d04-97ec-c37da3e4d62f\",\n  \"assistantOverrides\": {\n    \"variableValues\": {\n      \"Name\": \"{{ $json.name }}\",\n      \"Termin\": \"{{ $json.termin }}\"\n    }\n  },\n  \"customer\": {\n    \"number\": \"{{ $json.telefonnummer }}\"\n  },\n  \"phoneNumber\": {\n    \"twilioAccountSid\": \"AC70dc9b479d224becb0796bdc50742d75\",\n    \"twilioAuthToken\": \"943a5b77c1eb3c698f7fe6b98f64e64a\",\n    \"twilioPhoneNumber\": \"+12082718154\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "0c0cc3db-fe33-4320-82f7-3cbdc3e256d9",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6614e054-afa4-42b2-8cf4-05fd8e3e557a",
+  "meta": {
+    "instanceId": "4859b1835e199ab2a6c3412de22db564b818e1d0ef1418c63000d7155a3647fd"
+  },
+  "id": "59g7CjGTnCUv3FJs",
+  "tags": [
+    {
+      "createdAt": "2025-03-25T13:49:56.303Z",
+      "updatedAt": "2025-03-25T13:49:56.303Z",
+      "id": "vuaT1IHvTApv5ScR",
+      "name": "KI Caller"
+    }
+  ]
+}

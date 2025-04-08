@@ -1,0 +1,212 @@
+version: '3.8'
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # For HTTP/3 support
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./www:/srv/www
+      - ./welcome:/srv/welcome
+      - caddy_data:/data
+      - caddy_config:/config
+      - caddy_logs:/var/log/caddy
+    networks:
+      - ai_net
+
+  dashboard:
+    image: nginx:alpine
+    container_name: dashboard
+    restart: unless-stopped
+    pull_policy: always
+    volumes:
+      - ./www:/usr/share/nginx/html
+    networks:
+      - ai_net
+
+  n8n-import:
+    image: 'n8nio/n8n:latest'
+    container_name: n8n-import
+    pull_policy: always
+    entrypoint: /bin/sh
+    command:
+      - "-c"
+      - "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"
+    volumes:
+      - ./n8n/backup:/backup
+
+  n8n:
+    image: 'n8nio/n8n:latest'
+    container_name: n8n
+    restart: unless-stopped
+    pull_policy: always
+    depends_on:
+      - supabase
+      - n8n-import
+    ports:
+      - '5678:5678'
+    volumes:
+      - ./n8n/backup:/backup
+      - n8n_data:/home/node/.n8n
+    environment:
+      - N8N_PROTOCOL=http
+      - N8N_HOST=n8n.localhost
+      - N8N_PORT=5678
+      - NODE_ENV=production
+      - N8N_ENCRYPTION_KEY=change_me
+      - N8N_USER_MANAGEMENT_JWT_SECRET=change_me
+      - WEBHOOK_URL=https://n8n.localhost/
+      - GENERIC_TIMEZONE=UTC
+      - N8N_SECURE_COOKIE=false
+    networks:
+      - ai_net
+
+  supabase:
+    image: postgres:15-alpine
+    container_name: supabase
+    restart: unless-stopped
+    pull_policy: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - supabase_data:/var/lib/postgresql/data
+    networks:
+      - ai_net
+
+  openwebui:
+    image: 'ghcr.io/open-webui/open-webui:latest'
+    container_name: openwebui
+    restart: unless-stopped
+    pull_policy: always
+    depends_on:
+      - ollama
+    ports:
+      - '3000:8080'
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_API_BASE_URL=http://ollama:11434/api
+    volumes:
+      - openwebui_data:/app/backend/data
+    networks:
+      - ai_net
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - '11434:11434'
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - ai_net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - '8080:8080'
+    volumes:
+      - searxng_data:/etc/searxng
+    networks:
+      - ai_net
+
+  ytdlp:
+    image: alexta69/metube:latest
+    container_name: ytdlp
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - '8081:8081'
+    volumes:
+      - ytdlp_data:/downloads
+    networks:
+      - ai_net
+
+  webscrapyd:
+    image: node:18
+    container_name: webscrapyd
+    restart: unless-stopped
+    pull_policy: always
+    volumes:
+      - ./crawlee_projects:/app
+    working_dir: /app
+    ports:
+      - '5000:5000'
+    command: |
+      bash -c 'npm install && npx playwright install --with-deps chromium && node server.js'
+    networks:
+      - ai_net
+
+  flowise:
+    image: flowiseai/flowise:latest
+    container_name: flowise
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - '3001:3000'
+    environment:
+      - PORT=3000
+      - FLOWISE_USERNAME=admin
+      - FLOWISE_PASSWORD=admin
+    volumes:
+      - flowise_data:/root/.flowise
+    networks:
+      - ai_net
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - '9000:9000'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - ai_net
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    restart: unless-stopped
+    pull_policy: always
+    ports:
+      - '8082:8080'
+    networks:
+      - ai_net
+
+volumes:
+  caddy_data:
+  caddy_config:
+  caddy_logs:
+  n8n_data:
+  supabase_data:
+  openwebui_data:
+  ollama_data:
+  searxng_data:
+  ytdlp_data:
+  flowise_data:
+  portainer_data:
+
+networks:
+  ai_net:
+    driver: bridge

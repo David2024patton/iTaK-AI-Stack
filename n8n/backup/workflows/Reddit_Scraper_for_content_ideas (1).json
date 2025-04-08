@@ -1,0 +1,865 @@
+{
+  "name": "Reddit Scraper for content ideas",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.title }}{{ $json.selftext }}{{ $json.url }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a digital marketing and social media expert. You will receive several posts containing doubts or questions on a specific topic, extracted from various web pages. Your task is to transform each of these posts into a content idea for a vertical format video (less than 1 minute) \n\n\nalways reply in this style \n\t\"hook\": \"string\",\n\t\"description\": \"string\",\n  \"script\": \"string\",\n   \"why\": \"string\",\n  \"url\": \"string\"\n\t\t\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        600,
+        240
+      ],
+      "id": "3862aea4-7978-4d55-9a3d-482ca74e14d8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        540,
+        400
+      ],
+      "id": "3e22263f-7a45-4da8-b89c-3f13dfbf1e9f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ARuVpuHUXuPPWVY6",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=1"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        660,
+        420
+      ],
+      "id": "ba867869-b8b2-4f75-ad3c-e10c0dc3db38",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "subreddit": "smallbusiness",
+        "keyword": "=How do you | How can I | I can't stand | I'm struggling with | Can someone help | Figure out | Help me | Tips | Suggestions | Suggest | Biggest challenge | Biggest challenges | Hardest part | Biggest struggle | Struggle with\n",
+        "limit": 10,
+        "additionalFields": {
+          "sort": "new"
+        }
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        -1000,
+        60
+      ],
+      "id": "9a0767ea-1d7f-4606-9299-bb0ff2ff1670",
+      "name": "Reddit1",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "QqVGhgb1XtdvxnOz",
+          "name": "Reddit account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "subreddit": "Entrepreneur",
+        "keyword": "How do you | How can I | I can't stand | I'm struggling with | Can someone help | Figure out | Help me | Tips | Suggestions | Suggest | Biggest challenge | Biggest challenges | Hardest part | Biggest struggle | Struggle with",
+        "limit": 10,
+        "additionalFields": {
+          "sort": "new"
+        }
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        -1000,
+        260
+      ],
+      "id": "5e96fdca-552e-4936-91e3-0d1ca90f94be",
+      "name": "Reddit",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "QqVGhgb1XtdvxnOz",
+          "name": "Reddit account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "subreddit": "business",
+        "keyword": "How do you | How can I | I can't stand | I'm struggling with | Can someone help | Figure out | Help me | Tips | Suggestions | Suggest | Biggest challenge | Biggest challenges | Hardest part | Biggest struggle | Struggle with",
+        "limit": 10,
+        "additionalFields": {
+          "sort": "new"
+        }
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        -1000,
+        440
+      ],
+      "id": "89219315-a0ea-43b2-8875-ae0deab04f67",
+      "name": "Reddit2",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "QqVGhgb1XtdvxnOz",
+          "name": "Reddit account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"hook\": \"string\",\n\t\"description\": \"string\",\n  \"script\": \"string\",\n   \"why\": \"string\",\n  \"url\": \"string\"\n\t\t\n\t\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        780,
+        440
+      ],
+      "id": "a4f5b99b-a0b2-4187-9b72-30ce5933d18c",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "title, selftext, url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        40
+      ],
+      "id": "2c4a4c1a-c28e-466b-bb6c-c540261cd760",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Hoja 1",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "why": "={{ $json.output.output.why }}",
+            "url": "={{ $json.output.output.url }}",
+            "script": "={{ $json.output.output.script }}",
+            "Hook": "={{ $json.output.output.hook }}",
+            "Description": "={{ $json.output.output.description }}"
+          },
+          "matchingColumns": [
+            "output"
+          ],
+          "schema": [
+            {
+              "id": "Hook",
+              "displayName": "Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "script",
+              "displayName": "script",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "why",
+              "displayName": "why",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1180,
+        240
+      ],
+      "id": "3cfdacbe-f558-451d-b607-e65fabe65d8f",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XGdEYNpulnm6o6i1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.selftext }}",
+        "options": {
+          "categories": "User Needs Help or has a real question, Promotion of something, Not useful"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -60
+      ],
+      "id": "80b93bf2-22d9-448c-b524-6fc4f6eb9e6a",
+      "name": "Sentiment Analysis"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -40,
+        80
+      ],
+      "id": "3673e113-934b-4bb9-b9ab-402f63317879",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ARuVpuHUXuPPWVY6",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "title, selftext, url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        260
+      ],
+      "id": "649f8356-82ff-4d8d-81bf-7174a51d90cd",
+      "name": "Split Out2"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "title, selftext, url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        440
+      ],
+      "id": "26476210-30ce-4c4d-a737-25c82f0be92e",
+      "name": "Split Out3"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.selftext }}",
+        "options": {
+          "categories": "User Needs Help or has a real question, Promotion of something, Not useful"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        260
+      ],
+      "id": "dbefcb2d-fedd-4a1b-81e1-4e70abaa6f87",
+      "name": "Sentiment Analysis1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -40,
+        400
+      ],
+      "id": "b1796187-2fbc-4d2c-8a9d-6f7c2f2b1977",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "ARuVpuHUXuPPWVY6",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.selftext }}",
+        "options": {
+          "categories": "User Needs Help or has a real question, Promotion of something, Not useful"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        560
+      ],
+      "id": "624a4637-a29a-48e5-adf7-9a3b3a5106a3",
+      "name": "Sentiment Analysis2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        700
+      ],
+      "id": "8c62a8cc-abdd-41d7-a719-6378e1e86a27",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "ARuVpuHUXuPPWVY6",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 2,
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1460,
+        260
+      ],
+      "id": "2265faae-f58d-49d6-89ac-5df0502e0ce9",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "content": "# Retrieve Posts\n## Choose the subreddits to track",
+        "height": 840,
+        "width": 260,
+        "color": 2
+      },
+      "id": "5b793c8d-7296-43cb-a319-a8c0844ac4f5",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1080,
+        -220
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "0823d10a-ad54-4d82-bcea-9dd236e97857",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "leftValue": "={{ $json.ups }}",
+              "rightValue": 5
+            },
+            {
+              "id": "bb8187aa-f0f1-4999-8d4b-bdc9abba0618",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.selftext }}",
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1a926fa0-30d7-472a-8148-e5ff6226c77b",
+      "name": "Filter Posts By Features",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -700,
+        60
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "0823d10a-ad54-4d82-bcea-9dd236e97857",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "leftValue": "={{ $json.ups }}",
+              "rightValue": 5
+            },
+            {
+              "id": "bb8187aa-f0f1-4999-8d4b-bdc9abba0618",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.selftext }}",
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "1d50569f-7067-4296-8775-bc53f41d7033",
+      "name": "Filter Posts By Features1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -700,
+        280
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "0823d10a-ad54-4d82-bcea-9dd236e97857",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "leftValue": "={{ $json.ups }}",
+              "rightValue": 5
+            },
+            {
+              "id": "bb8187aa-f0f1-4999-8d4b-bdc9abba0618",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.selftext }}",
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "bdcd0988-7ae3-4fb8-b6dc-6e9151510e9e",
+      "name": "Filter Posts By Features2",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -700,
+        460
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "content": "# Filter\n## Filter by upvotes and time of posted",
+        "height": 840,
+        "width": 260,
+        "color": 5
+      },
+      "id": "160406db-2f88-44c3-bc57-4d83512e2f7e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -780,
+        -220
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Analyze\n## Look for the real intention behind the post, is it for promotion or actually someone asking for help",
+        "height": 1100,
+        "width": 460,
+        "color": 3
+      },
+      "id": "d684013a-b382-43b2-b5b7-af4e3bbf32cb",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -120,
+        -260
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Process\n\n## Process the ideas and creates content structure",
+        "height": 580,
+        "width": 460,
+        "color": 4
+      },
+      "id": "8cce5a29-4c03-492e-9393-e52d2c629c29",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        480,
+        20
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reddit1": {
+      "main": [
+        [
+          {
+            "node": "Filter Posts By Features",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reddit": {
+      "main": [
+        [
+          {
+            "node": "Filter Posts By Features1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reddit2": {
+      "main": [
+        [
+          {
+            "node": "Filter Posts By Features2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Analysis": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out2": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analysis1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out3": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analysis2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Analysis1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Analysis1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Analysis2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Analysis2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Reddit1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Reddit",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Reddit2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Posts By Features": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Posts By Features1": {
+      "main": [
+        [
+          {
+            "node": "Split Out2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Posts By Features2": {
+      "main": [
+        [
+          {
+            "node": "Split Out3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6f0fd925-9db7-4432-bd9b-94feb9d2e3d2",
+  "meta": {
+    "instanceId": "a2a807d7948dcffe26fd8e8d37816f61343939153ec0ed16aa577a3f24dd830c"
+  },
+  "id": "HutodNGfByiEK7WI",
+  "tags": []
+}

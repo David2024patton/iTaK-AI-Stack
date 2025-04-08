@@ -1,0 +1,1166 @@
+{
+  "name": "HeyGen Video Gen v2: Cutscene Version",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        100,
+        0
+      ],
+      "id": "d96a71bd-5bf0-41f4-84d2-83613eb3f99c",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.heygen.com/v2/video/generate",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $('Code2').first().json.payload }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        160,
+        540
+      ],
+      "id": "ffd334b1-9b40-41c3-912d-b6f0e4e516c1",
+      "name": "HTTP Request: Generate a Video in HeyGen",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Z1j2lhfHiUY7e3pq",
+          "name": "HeyGen account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 60
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        380,
+        540
+      ],
+      "id": "7f91dea4-c306-404c-8166-37e6839ec1e3",
+      "name": "Wait",
+      "webhookId": "be87984c-9257-4984-8c14-22bbf44f0c7f"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4169684c-f417-4728-9399-5c47dca05deb",
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        820,
+        540
+      ],
+      "id": "2bb983e3-79ea-4096-8eae-9b8b0fb46781",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.heygen.com/v1/video_status.get?video_id={{ $('HTTP Request: Generate a Video in HeyGen').first().json.data.video_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        540
+      ],
+      "id": "dc5969d2-cd84-4d88-bcc2-fd9a3a71fe98",
+      "name": "HTTP Request: Check the Status",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Z1j2lhfHiUY7e3pq",
+          "name": "HeyGen account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "app830H9epkKJqyRF",
+          "mode": "list",
+          "cachedResultName": "Content Transformer",
+          "cachedResultUrl": "https://airtable.com/app830H9epkKJqyRF"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblbbXWmCClNXR8z8",
+          "mode": "list",
+          "cachedResultName": "Videos",
+          "cachedResultUrl": "https://airtable.com/app830H9epkKJqyRF/tblbbXWmCClNXR8z8"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable: Get the Video Script').first().json.id }}",
+            "Status": "Done",
+            "SF Video URL": "={{ $json.attachments[0].url }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Video ID",
+              "displayName": "Video ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Long-Form Script",
+              "displayName": "Long-Form Script",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Short-form Script",
+              "displayName": "Short-form Script",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Image Creation Prompts",
+              "displayName": "Image Creation Prompts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Creator",
+              "displayName": "Creator",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Associated Images",
+              "displayName": "Associated Images",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "SFV Images Used",
+              "displayName": "SFV Images Used",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "SF Video URL",
+              "displayName": "SF Video URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "LF Video URL",
+              "displayName": "LF Video URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Publish Date",
+              "displayName": "Publish Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Transformer",
+              "displayName": "Transformer",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date Created",
+              "displayName": "Date Created",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "AutoNumber",
+              "displayName": "AutoNumber",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Images and Memes copy",
+              "displayName": "Images and Memes copy",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Images and Memes copy",
+              "displayName": "Images and Memes copy",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1700,
+        600
+      ],
+      "id": "64f7bea4-1a4e-4d06-aba3-8413c3a8f850",
+      "name": "Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "OXdNIGBud2iVgX6R",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const attachments = [];\n\n$input.all().forEach(item => {\n    const videoURL = item.json.data.video_url;\n    // const videoURL = item.json.video_url;\n    attachments.push({url: videoURL});\n});\n\nreturn {json: {attachments: attachments}};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        600
+      ],
+      "id": "052136ec-a8ad-4198-aa0d-e711054a1db2",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const video_inputs = $input.first().json.video_inputs;\n\nconst payload = {\n    caption: true,\n    \"caption_style\": {\n        \"color\": \"#FFFFFF\",\n        \"font\": \"Arial\",\n        \"size\": 16,\n        \"position\": \"bottom\"\n    },\n    dimension: {\n        width: 1080,\n        height: 1920\n    },\n    title: `${$('Airtable: Get the Video Script').first().json.Title}`,\n    video_inputs: video_inputs\n};\n\nreturn [\n    {\n        json: {payload: payload}\n    }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        280
+      ],
+      "id": "1c5b5ee8-8aa9-4b84-be69-31bf21cab465",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "content": "# Create Videos\n\nSend Script to HeyGen",
+        "height": 220,
+        "width": 380,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        80
+      ],
+      "id": "c6908d82-cb93-471b-baf7-7cd6bb0832dc",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const script = $input.first().json['Short-form Script'];\nconst avatar_ids= ['Lindiwe_standing_lounge_side', 'Lindiwe_sitting_lounge_front', 'Lindiwe_standing_lounge_front', 'Lindiwe_sitting_lounge_side'];\n\n// Remove lines starting with '#'\nconst cleanedScript = script\n  .split('\\n') // Split script into lines\n  .filter(line => !line.startsWith('#')) // Remove lines starting with '#'\n  .join('\\n')\n  .split('\\n\\n'); // Join the remaining lines back into a string\n\n// Map over cleaned scripts and dynamically assign avatar IDs\nconst videoInputs = cleanedScript.map((script, index) => {\n    return {\n        character: {\n            type: \"avatar\",\n            avatar_id: avatar_ids[index % avatar_ids.length], // Dynamically pick avatar ID, looping if more scripts\n            avatar_style: \"normal\",\n            position: \"center\",\n            scale: 1.7,\n        },\n        voice: {\n            type: \"text\",\n            input_text: script, // Assign script text\n            voice_id: \"3e3193831b9e4e39afabb803696868d4\", // Keep static or modify if required\n        },\n    };\n});\n\n// Output the constructed videoInputs array\nreturn [{ json: { video_inputs: videoInputs } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        280
+      ],
+      "id": "2fa755ab-7a06-4a93-822e-a659c2b32e98",
+      "name": "Code8"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6cfe3471-1c83-4462-b565-532d5c7b1475",
+              "leftValue": "={{ $json.data.status }}",
+              "rightValue": "failed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1040,
+        680
+      ],
+      "id": "eab8c8a9-d302-4430-99aa-2022706250a9",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "errorMessage": "Your workflow died"
+      },
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        780
+      ],
+      "id": "e03c4cc3-9750-4825-baee-24a4204a9a6c",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert copywriter specialising in marketing campaigns. Create a short-form video script tailored to Tiktok to promote an AI Product. Use the information below to generate your content:\n\nTone: {{ $json.Tone }}\nTitle: {{ $json.Title }}\nTarget Audience: {{ $json['Target Audience'] }}\nContent Purpose: {{ $json['Content Purpose'] }}\nKey Value Proposition: {{ $json['Content Value'] }}\nOriginal persective/Hot take: {{ $json['Original Perspective'] }}\n\n\nHere's what you should do:\n\n1. Write an attention-grabbing opening to immediately capture interest within the first few seconds.\n2. Write the main content message making sure to trigger the target audience's pain points to make sure they get emotionally activated.\n3. Highlight the key value proposition or benefit of the product/service throughout the script\n4. Include a strong, actionable statement to drive the audience toward the next step.\n5. Ensure SEO-optimised keywords are embedded in the script for discoverability.\n\nOutput your content as just content with nothing else. No filler words, no Markdown Headings... Just a block of text separated by Newlines."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1020,
+        -160
+      ],
+      "id": "24e603bd-f64e-49b4-9a67-593b2b3269b7",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "rpGLzAjVhE44CglP",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "app830H9epkKJqyRF",
+          "mode": "list",
+          "cachedResultName": "Content Transformer",
+          "cachedResultUrl": "https://airtable.com/app830H9epkKJqyRF"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblkl6pbUGGlNPNPN",
+          "mode": "list",
+          "cachedResultName": "Ideas",
+          "cachedResultUrl": "https://airtable.com/app830H9epkKJqyRF/tblkl6pbUGGlNPNPN"
+        },
+        "returnAll": false,
+        "limit": 1,
+        "options": {},
+        "sort": {
+          "property": [
+            {
+              "field": "Created"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        380,
+        0
+      ],
+      "id": "784e7c65-3514-4fa1-9f62-7f5fcdfc26b1",
+      "name": "Airtable2",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "OXdNIGBud2iVgX6R",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "app830H9epkKJqyRF",
+          "mode": "list",
+          "cachedResultName": "Content Transformer",
+          "cachedResultUrl": "https://airtable.com/app830H9epkKJqyRF"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblbbXWmCClNXR8z8",
+          "mode": "list",
+          "cachedResultName": "Videos",
+          "cachedResultUrl": "https://airtable.com/app830H9epkKJqyRF/tblbbXWmCClNXR8z8"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $('Airtable2').item.json.Title }}",
+            "Description": "={{ $('Airtable2').item.json['Content Purpose'] }}",
+            "Short-form Script": "={{ $json.message.content }}",
+            "Transformer": "={{ $('Airtable2').item.json.Transformer }}",
+            "Status": "Todo"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Video ID",
+              "displayName": "Video ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Long-Form Script",
+              "displayName": "Long-Form Script",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Short-form Script",
+              "displayName": "Short-form Script",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Image Creation Prompts",
+              "displayName": "Image Creation Prompts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Creator",
+              "displayName": "Creator",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Associated Images",
+              "displayName": "Associated Images",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "SFV Images Used",
+              "displayName": "SFV Images Used",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "SF Video URL",
+              "displayName": "SF Video URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "LF Video URL",
+              "displayName": "LF Video URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Publish Date",
+              "displayName": "Publish Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Transformer",
+              "displayName": "Transformer",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date Created",
+              "displayName": "Date Created",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "AutoNumber",
+              "displayName": "AutoNumber",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Images and Memes copy",
+              "displayName": "Images and Memes copy",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Images and Memes copy",
+              "displayName": "Images and Memes copy",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1360,
+        -160
+      ],
+      "id": "6f1697ef-aa83-41d5-9c60-911b3111e937",
+      "name": "Airtable3",
+      "alwaysOutputData": true,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "OXdNIGBud2iVgX6R",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "94034946-91b5-4b45-8912-d8e8277d9506",
+              "leftValue": "={{ $json.Videos }}",
+              "rightValue": "",
+              "operator": {
+                "type": "array",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        820,
+        0
+      ],
+      "id": "9a32afe1-1edd-4f1c-9e94-1e6d41dfd21f",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "value": "app830H9epkKJqyRF",
+          "mode": "list",
+          "cachedResultName": "Content Transformer",
+          "cachedResultUrl": "https://airtable.com/app830H9epkKJqyRF"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblpyLB0o4OxDNEpY",
+          "mode": "list",
+          "cachedResultName": "Transformer",
+          "cachedResultUrl": "https://airtable.com/app830H9epkKJqyRF/tblpyLB0o4OxDNEpY"
+        },
+        "id": "={{ $json.Transformer[0] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        600,
+        0
+      ],
+      "id": "a8b421d9-8dbe-4b7d-b390-ada86fb7033c",
+      "name": "Airtable4",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "OXdNIGBud2iVgX6R",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1540,
+        0
+      ],
+      "id": "b9f2949e-2f9e-461f-a071-8fa82cea95cb",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "value": "app830H9epkKJqyRF",
+          "mode": "list",
+          "cachedResultName": "Content Transformer",
+          "cachedResultUrl": "https://airtable.com/app830H9epkKJqyRF"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblbbXWmCClNXR8z8",
+          "mode": "list",
+          "cachedResultName": "Videos",
+          "cachedResultUrl": "https://airtable.com/app830H9epkKJqyRF/tblbbXWmCClNXR8z8"
+        },
+        "id": "={{ $json.Videos[0] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        180,
+        280
+      ],
+      "id": "72aa79b8-0bd1-4aaf-a29b-10fe028c2477",
+      "name": "Airtable: Get the Video Script",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "OXdNIGBud2iVgX6R",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Airtable2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request: Generate a Video in HeyGen": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request: Check the Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request: Check the Status": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request: Generate a Video in HeyGen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code8": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Airtable3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable2": {
+      "main": [
+        [
+          {
+            "node": "Airtable4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Airtable4": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Airtable: Get the Video Script",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable: Get the Video Script": {
+      "main": [
+        [
+          {
+            "node": "Code8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3ad4716b-e979-4b20-a7cf-023f007167fc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c4f9b6615ac1cf45381fabc81fe54931374a4e5a2fa8e093c7ed4bae1d24ff72"
+  },
+  "id": "ICQIiqd28hg1vm2T",
+  "tags": []
+}

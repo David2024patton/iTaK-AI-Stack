@@ -1,0 +1,581 @@
+{
+  "name": "TEMPLATE: Competitor Research Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        340,
+        120
+      ],
+      "id": "1edb9c32-c75b-42b3-ba90-695fbe0a3530",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0c17e60b-7424-4f0c-bddb-217101b62cbf",
+              "name": "general_info",
+              "value": "={{ $json.choices[0].message.content }}",
+              "type": "string"
+            },
+            {
+              "id": "0e3ab6a9-19a8-4cb8-9e2b-6235b891d384",
+              "name": "news",
+              "value": "={{ JSON.stringify($json.results[0], null, 2) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        500,
+        120
+      ],
+      "id": "9d6d5ed2-f930-438d-b417-a1ff696fe7ae",
+      "name": "Set fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "=Find news from the last 7 days about:{{ $json['Competitor Name'] }}, {{ $json.Website_url }}"
+            },
+            {
+              "name": "search_depth",
+              "value": "advanced"
+            },
+            {
+              "name": "topic",
+              "value": "news"
+            },
+            {
+              "name": "max_results",
+              "value": "10"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        200
+      ],
+      "id": "b2d49a5e-9cc3-4bda-91b7-cfab79c18a00",
+      "name": "Tavily News",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "MDPdvWHAS42mQpLV",
+          "name": "Tavily Header Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "llama-3.1-sonar-small-128k-online"
+            },
+            {
+              "name": "messages[0].role",
+              "value": "user"
+            },
+            {
+              "name": "messages[0].content",
+              "value": "=<prompt> You are tasked with analyzing a competitor using publicly available data. Your objective is to create a detailed competitive intelligence report that follows strict ethical guidelines and focuses on key business metrics.   <target>  Analyze the following competitor: {{ $json.Website_url }} </target>   <focus_areas> Research and document these key aspects: *Brand positioning and market messaging *Product portfolio and recent launches *Pricing structure and recent adjustments *Client base and notable wins *Investment rounds and financial status *Organizational growth and hiring trends </focus_areas>  <research_guidelines> For each focus area: *Utilize only public information from credible sources *Prioritize data from the past 12 months *Include specific metrics and timestamps *Note any information gaps clearly </research_guidelines>  <data_sources> Acceptable sources include: *Official company websites *Press releases *News articles *Industry reports *Social media profiles *Job boards *Financial filings </data_sources>  <formatting_requirements> Structure your report with: *Clear section headers *Bullet points for key findings *Timestamps for all updates *Data visualizations where relevant </formatting_requirements>  <compliance_notes> *Only use publicly accessible information *Avoid speculation or unverified claims *Document all information sources *Maintain ethical research standards </compliance_notes> </prompt>"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fb9701ee-ba10-403a-b935-9f77ce9fd03c",
+      "name": "Perplexity Info",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Tzw4wU9OLnqW5vSg",
+          "name": "Perplexity Header Bearer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1LDL4OD5PDDGFifQCnOYVrA5MXw8147-auWJNTUbn5Xk",
+          "mode": "list",
+          "cachedResultName": "Competitor Research Demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LDL4OD5PDDGFifQCnOYVrA5MXw8147-auWJNTUbn5Xk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Research",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LDL4OD5PDDGFifQCnOYVrA5MXw8147-auWJNTUbn5Xk/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -340,
+        100
+      ],
+      "id": "9a219e3a-2ae3-46dc-aae1-5f60ffcd5521",
+      "name": "Pull Competitors",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5tlxty6J0HWpA26B",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        340
+      ],
+      "id": "695b4dc8-2a11-49c3-b33d-f5ad0029369f",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "content": "## Get Inputs\nCompetitors",
+        "height": 270,
+        "width": 224,
+        "color": 7
+      },
+      "id": "00c96974-a65d-451d-814a-257db1d4323e",
+      "name": "Sticky Note23",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Get Information & News\nUsing Perplexity & Tavily",
+        "height": 470,
+        "width": 404,
+        "color": 7
+      },
+      "id": "a920d79f-274c-469d-8228-93a96bac4e21",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Merge info together & format\n",
+        "height": 270,
+        "width": 664,
+        "color": 7
+      },
+      "id": "a8fd2a2e-461c-435c-be86-0ba6c548312b",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        300,
+        20
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        760,
+        300
+      ],
+      "id": "e3cfca89-2d0e-441d-837f-1ee11995be3d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "PePOltzEDz7s0kVb",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<inputs>\n1. Research data about the target: {{ $json.general_info }}\n2. Recent news articles: {{ $json.news }}\n</inputs>",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are tasked with analyzing two inputs and formatting them into a standardized intelligence report.\n\n<inputs>\n1. Research data about the target\n2. Recent news articles\n</inputs>\n\n<output>\nFormat your analysis using these exact headers:\n\n## Market Position\n- Current status\n- Competitive advantage\n- Target audience\n\n## Product Portfolio\n- Current offerings\n- Recent launches\n- Pipeline developments\n\n## Pricing Strategy\n- Market positioning\n- Recent changes\n- Promotional activities\n\n## Corporate Updates\n- Leadership changes\n- Strategic initiatives\n- Company announcements\n\n## Financial Status\n- Funding rounds\n- Revenue indicators\n- Market performance\n\n## Growth Metrics\n- Team size\n- Market expansion\n- Customer acquisition\n</output>\n\n<rules>\n- Include dates for all developments\n- Note information gaps\n- Use bullet points for findings\n- Bold significant metrics\n</rules>"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        680,
+        120
+      ],
+      "id": "f21875ba-dbef-4df6-a735-7caee650ae50",
+      "name": "Format report"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1LDL4OD5PDDGFifQCnOYVrA5MXw8147-auWJNTUbn5Xk",
+          "mode": "list",
+          "cachedResultName": "Competitor Research Demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LDL4OD5PDDGFifQCnOYVrA5MXw8147-auWJNTUbn5Xk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Research",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LDL4OD5PDDGFifQCnOYVrA5MXw8147-auWJNTUbn5Xk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "Competitor Name": "={{ $('Pull Competitors').item.json['Competitor Name'] }}"
+          },
+          "matchingColumns": [
+            "Competitor Name"
+          ],
+          "schema": [
+            {
+              "id": "Competitor Name",
+              "displayName": "Competitor Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Website_url",
+              "displayName": "Website_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "2025-01-15",
+              "displayName": "2025-01-15",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ]
+        },
+        "options": {
+          "handlingExtraData": "insertInNewColumn"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1220,
+        120
+      ],
+      "id": "de4f798d-63d6-47a2-beb2-b96e32dd59a2",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "5tlxty6J0HWpA26B",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -560,
+        100
+      ],
+      "id": "0b6f446b-3d1b-4ad7-a527-5dbf15b95546",
+      "name": "Daily, 8am"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "af5f05dc-59ff-4860-b263-2601bdf9e104",
+              "name": "Competitor Name",
+              "value": "={{ $('Pull Competitors').item.json['Competitor Name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9997e51d-a053-4bfc-b3ac-55370ed46277",
+              "name": "={{ $now.format('yyyy-MM-dd') }}",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1020,
+        120
+      ],
+      "id": "4311ec43-2924-49c5-bc02-35c22dee4bf8",
+      "name": "Set output"
+    },
+    {
+      "parameters": {
+        "content": "## Update Research\nAfter setting output fields\n",
+        "height": 270,
+        "width": 384,
+        "color": 7
+      },
+      "id": "dfa93ac2-4341-4200-a389-a5fdbf31807d",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        980,
+        20
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Steps to personalise\n\n### 1. Create your own GSheet with same column headings (Competitor Name\tWebsite_url) - https://docs.google.com/spreadsheets/d/1LDL4OD5PDDGFifQCnOYVrA5MXw8147-auWJNTUbn5Xk/edit?gid=0#gid=0\n### 2. Fill out some competitors\n### 3. Add own api Keys for Tavily, Perplexity and OpenAI\n### 4. Run",
+        "height": 300,
+        "width": 620,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1260,
+        0
+      ],
+      "id": "8021565e-7c20-4c72-bf3c-d7e71c8b0fa4",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Set fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set fields": {
+      "main": [
+        [
+          {
+            "node": "Format report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily News": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Perplexity Info": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pull Competitors": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Info",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tavily News",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Pull Competitors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Format report",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format report": {
+      "main": [
+        [
+          {
+            "node": "Set output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        []
+      ]
+    },
+    "Daily, 8am": {
+      "main": [
+        [
+          {
+            "node": "Pull Competitors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set output": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "LSwvoNHos0M7zeqs"
+  },
+  "versionId": "f870b7a7-8ad2-4200-adeb-1988a48683aa",
+  "meta": {
+    "instanceId": "6b6a2db47bdf8371d21090c511052883cc9a3f6af5d0d9d567c702d74a18820e"
+  },
+  "id": "tsyJaxsojHo3qHPL",
+  "tags": []
+}

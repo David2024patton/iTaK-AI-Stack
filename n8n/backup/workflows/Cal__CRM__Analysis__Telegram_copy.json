@@ -1,0 +1,504 @@
+{
+  "name": "Cal->CRM->Analysis->Telegram copy",
+  "nodes": [
+    {
+      "parameters": {
+        "text": "={{ $('Cal.com Trigger').item.json.responses.name.value }} has booked a meeting with you.\nCompany: {{ $('Cal.com Trigger').item.json.responses.title.value }}\nIndustry: {{ $('Summary').item.json.message.content.Industry }}\nURL: {{ $('Cal.com Trigger').item.json.responses.URL.value }}\n\nMission: {{ $('Summary').item.json.message.content['Mission/Values'] }}\n\nProduct/Service: {{ $('Summary').item.json.message.content['Product/Service'] }}\n\n\n",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        -820
+      ],
+      "id": "91294982-2b5e-4a2b-8965-8b392f992e8e",
+      "name": "Telegram",
+      "webhookId": "39546308-38d2-40d2-a20f-8baed8be15dd",
+      "credentials": {
+        "telegramApi": {
+          "id": "2iCdPMAVY5sReRbP",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Cal.com Trigger').item.json.responses.URL.value }}",
+        "options": {}
+      },
+      "id": "7b79d333-dc2b-4a3e-96b7-77dd6caffca6",
+      "name": "Scape Company Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -820
+      ],
+      "alwaysOutputData": false,
+      "notesInFlow": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are an expert in professional business analysis and website data extraction. Your task is to analyze and interpret the scraped homepage of a company’s website to produce a high-quality, comprehensive report. Your responses must be precise, well-structured, and entirely based on the provided input data, without making assumptions or adding unsupported details. Focus on delivering clear, professional insights tailored to the requirements outlined below.",
+              "role": "system"
+            },
+            {
+              "content": "=Analyze the scraped homepage of the company’s website and provide a detailed, professional report covering the following points:\n\n1.) Product/Service Analysis:\n- Describe the company’s products or services in detail.\n- Identify their industry\n- Identify their ideal clients (ICP) (e.g., small businesses, enterprises, consumers, etc.).\n\n2.) Key Messaging/Value Proposition:\n- Summarize the company’s key messaging and value proposition.\n- Explain the problems or pain points they aim to solve for their customers.\n- Note any mentions of how they differentiate themselves from competitors.\n\n3.) Content Analysis:\n- Retrieve and list any success stories, or case studies mentioned on the homepage.\n- Include dates when available for relevancy ranking purposes.\n\nProvide a professional, well-organized output, ensuring each section is addressed in full detail and avoids unnecessary filler.\"\n\n#Notes\n- Title all the output as Company Website\n- If {{ $json.plainText }} is empty or contains error codes - output that the website was unsuccesfully scraped."
+            },
+            {
+              "content": "={{ $json.plainText }}\n- Today's date: {{$now}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5f6cd937-0ae8-44fb-bbbb-021a3f1522ab",
+      "name": "Analyze Company URL",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        820,
+        -1020
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5JIVGUvxi9YPwiAC",
+          "name": "n8n Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "events": [
+          "BOOKING_CREATED"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.calTrigger",
+      "typeVersion": 2,
+      "position": [
+        0,
+        -820
+      ],
+      "id": "7d18a892-dfac-4674-9ad3-b7e6ffa6cccd",
+      "name": "Cal.com Trigger",
+      "webhookId": "e9672ee5-77d2-4c59-b9d1-5cafffd5cc7a",
+      "credentials": {
+        "calApi": {
+          "id": "vuxwYTuoy5J3mWK5",
+          "name": "Cal account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $('Cal.com Trigger').item.json.responses.name.value }} has booked a meeting with you.\n\nCompany: {{ $('Cal.com Trigger').item.json.responses.title.value }}\nURL: {{ $('Cal.com Trigger').item.json.responses.URL.value }}\n\n\n\n",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        600,
+        -680
+      ],
+      "id": "2c1e350b-815d-432e-bb87-f6332b436647",
+      "name": "Telegram_",
+      "webhookId": "3c60a964-d1ce-4408-b7a9-a86b33432677",
+      "credentials": {
+        "telegramApi": {
+          "id": "2iCdPMAVY5sReRbP",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "team": "9013661013",
+        "space": "90132864661",
+        "folderless": true,
+        "list": "901308101476",
+        "name": "={{ $('Cal.com Trigger').item.json.responses.name.value }}",
+        "additionalFields": {
+          "customFieldsJson": "=[\n{\"id\": \"e10dc302-e03b-4140-80cf-8482036f9287\",\"value\":\"{{ $('Cal.com Trigger').item.json.responses.email.value }}\"},\n{\"id\": \"49f43ee8-b713-40b5-8d84-6c997664140d\",\"value\":\"{{ $('Cal.com Trigger').item.json.responses.title.value }}\"},\n{\"id\": \"752d2d7c-0ebf-4e9a-abc9-6b40126afb96\", \"value\": \"{{ $('Cal.com Trigger').item.json.metadata.videoCallUrl }}\"},\n{\"id\": \"317ec7ca-1c7a-4d37-8e89-b3d31184b69a\", \"value\": \"{{ $('Cal.com Trigger').item.json.userFieldsResponses.URL.value }}\"}\n]",
+          "status": "meeting booked"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -820
+      ],
+      "id": "ac0982c8-3582-4036-98d7-e2073324444c",
+      "name": "Create Record",
+      "credentials": {
+        "clickUpOAuth2Api": {
+          "id": "k6zNLe0bndFSxtod",
+          "name": "ClickUp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Instant Notification with Details on Booked Meeting\n\n- Booking Confirmed Trigger from Cal.com\n- Create Record in CRM\n- Scrape HTML from submitted URL\n\n- If error, send message via with only URL link\n\n- If success, analyze URL for Key company information, and send via telegram\n\n",
+        "height": 440,
+        "width": 600,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -1100
+      ],
+      "id": "5f7ac550-c203-49be-9621-769126038f8a",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Adaptable to any CRM and messenger\n\nCurrent Output Message: ... \n\n{{firstName}} has booked a meeting with you.\nCompany: {{company}}\nIndustry: {{industry}}\nURL: {{url}}\n\nMission: {{mission}}\n\nProduct/Service: {{product}}\n",
+        "height": 280,
+        "width": 520,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -1100
+      ],
+      "id": "5b025161-3fb0-44dd-abd9-0e60a4b89428",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const htmlContent = $node[\"Scape Company Page\"].json[\"data\"]; // Replace this with the field containing your HTML content\n\n// Function to strip HTML tags and clean the text\nconst extractPlainText = (html) => {\n    if (!html) return \"\";\n\n    // Remove script and style tags along with their content\n    const withoutScriptsAndStyles = html.replace(/<script[\\s\\S]*?>[\\s\\S]*?<\\/script>/gi, \"\")\n                                        .replace(/<style[\\s\\S]*?>[\\s\\S]*?<\\/style>/gi, \"\");\n\n    // Remove all remaining HTML tags\n    const strippedText = withoutScriptsAndStyles.replace(/<\\/?[^>]+(>|$)/g, \"\");\n\n    // Replace HTML entities with their plain-text equivalents\n    const decodedText = strippedText.replace(/&nbsp;/gi, \" \")\n                                    .replace(/&amp;/gi, \"&\")\n                                    .replace(/&lt;/gi, \"<\")\n                                    .replace(/&gt;/gi, \">\")\n                                    .replace(/&quot;/gi, \"\\\"\")\n                                    .replace(/&#39;/gi, \"'\");\n\n    // Replace multiple spaces, tabs, and newlines with a single space\n    const cleanedText = decodedText.replace(/\\s+/g, \" \").trim();\n\n    return cleanedText;\n};\n\n// Call the function to process the HTML content\nconst plainText = extractPlainText(htmlContent);\n\n// Return the plain text as the output of this node\nreturn {\n    plainText: plainText,\n};\n\n"
+      },
+      "id": "ae288dae-ffb9-479d-bb01-a42174f67d51",
+      "name": "Clean Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        -1020
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert in analyzing business insights. Your task is to analyze the input data from the lead’s company website. Use your expertise in the B2B space to derive the most accurate, fact-based answers. The output must be structured, actionable, and grounded in the provided data without making up numbers or unsupported claims.\n\n",
+              "role": "system"
+            },
+            {
+              "content": "=Answer the following questions comprehensively while in a casual spartan tone. \n\n## Analysis Questions:\n\n# Industry:\nCarefully define the company’s industry.\n\n# Mission/Values:\nSummarize the company’s main mission or values.\n\n# Product/Service:\nDescribe the main product or service the company offers.\n\nFormat the response as a JSON object in the following structure:\n\n{\n  \"Industry\", \n  \"Mission/Values\", \n  \"Product/Service\"\n}\n\nEnsure all sections are included even if specific information is not available. For missing information, use \"Not specified.\""
+            },
+            {
+              "content": "=Company Content: {{ $json.message.content }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "id": "54ae04a8-5e5c-4d08-8b18-cf7982075779",
+      "name": "Summary",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.7,
+      "position": [
+        680,
+        -820
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "5JIVGUvxi9YPwiAC",
+          "name": "n8n Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "Telegram BotFather Connection Guide\nhttps://docs.n8n.io/integrations/builtin/credentials/telegram/",
+        "height": 80,
+        "width": 520,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -780
+      ],
+      "id": "b397c043-a43b-46d8-8ca2-b6e724de1915",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {
+    "Cal.com Trigger": [
+      {
+        "json": {
+          "triggerEvent": "BOOKING_CREATED",
+          "createdAt": "2025-03-18T23:44:53.460Z",
+          "bookerUrl": "https://cal.com",
+          "type": "consult-with-martin",
+          "title": "Consult with Martin",
+          "description": "Tell me how I can help you!",
+          "additionalNotes": "",
+          "customInputs": {},
+          "startTime": "2025-03-21T20:00:00Z",
+          "endTime": "2025-03-21T20:30:00Z",
+          "organizer": {
+            "id": 1421818,
+            "name": "Martin Sessoms",
+            "email": "martin@malenai.com",
+            "username": "malenai",
+            "timeZone": "America/New_York",
+            "language": {
+              "locale": "en"
+            },
+            "timeFormat": "h:mma",
+            "utcOffset": -240
+          },
+          "responses": {
+            "name": {
+              "label": "your_name",
+              "value": "Gabe Newell",
+              "isHidden": false
+            },
+            "email": {
+              "label": "email_address",
+              "value": "gabe@valve.com",
+              "isHidden": false
+            },
+            "location": {
+              "label": "location",
+              "value": {
+                "value": "integrations:google:meet",
+                "optionValue": ""
+              },
+              "isHidden": false
+            },
+            "title": {
+              "label": "Company Name",
+              "value": "Valve",
+              "isHidden": false
+            },
+            "URL": {
+              "label": "Company URL",
+              "value": "https://www.valvesoftware.com/en/",
+              "isHidden": false
+            },
+            "notes": {
+              "label": "additional_notes",
+              "isHidden": false
+            },
+            "guests": {
+              "label": "additional_guests",
+              "value": [],
+              "isHidden": true
+            },
+            "rescheduleReason": {
+              "label": "reason_for_reschedule",
+              "isHidden": true
+            }
+          },
+          "userFieldsResponses": {
+            "URL": {
+              "label": "Company URL",
+              "value": "https://www.valvesoftware.com/en/",
+              "isHidden": false
+            }
+          },
+          "attendees": [
+            {
+              "email": "gabe@valve.com",
+              "name": "Gabe Newell",
+              "firstName": "",
+              "lastName": "",
+              "timeZone": "America/New_York",
+              "language": {
+                "locale": "en"
+              },
+              "utcOffset": -240
+            }
+          ],
+          "location": "integrations:google:meet",
+          "destinationCalendar": [
+            {
+              "id": 518209,
+              "integration": "google_calendar",
+              "externalId": "martin@malenai.com",
+              "primaryEmail": "sessoms.ama@gmail.com",
+              "userId": null,
+              "eventTypeId": 2034182,
+              "credentialId": 845073,
+              "delegationCredentialId": null,
+              "domainWideDelegationCredentialId": null
+            }
+          ],
+          "hideCalendarNotes": false,
+          "hideCalendarEventDetails": false,
+          "requiresConfirmation": false,
+          "eventTypeId": 2034182,
+          "seatsShowAttendees": true,
+          "seatsPerTimeSlot": null,
+          "seatsShowAvailabilityCount": true,
+          "schedulingType": null,
+          "iCalUID": "9ZdnHxTnsZxFmMKJYp1Ld9@Cal.com",
+          "iCalSequence": 0,
+          "oneTimePassword": null,
+          "uid": "9ZdnHxTnsZxFmMKJYp1Ld9",
+          "conferenceData": {
+            "createRequest": {
+              "requestId": "8a0ce172-f69a-51b5-8481-93feb73d58e2"
+            }
+          },
+          "appsStatus": [
+            {
+              "appName": "google-calendar",
+              "type": "google_calendar",
+              "success": 1,
+              "failures": 0,
+              "errors": [],
+              "warnings": []
+            },
+            {
+              "appName": "Google Meet",
+              "type": "conferencing",
+              "success": 1,
+              "failures": 0,
+              "errors": []
+            }
+          ],
+          "eventTitle": "Consult with Martin",
+          "eventDescription": "Tell me how I can help you!",
+          "price": 0,
+          "currency": "usd",
+          "length": 30,
+          "bookingId": 6586558,
+          "metadata": {
+            "videoCallUrl": "https://meet.google.com/awm-bqfn-uba"
+          },
+          "status": "ACCEPTED"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Scape Company Page": {
+      "main": [
+        [
+          {
+            "node": "Clean Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram_",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Company URL": {
+      "main": [
+        [
+          {
+            "node": "Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cal.com Trigger": {
+      "main": [
+        [
+          {
+            "node": "Create Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        []
+      ]
+    },
+    "Create Record": {
+      "main": [
+        [
+          {
+            "node": "Scape Company Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Data": {
+      "main": [
+        [
+          {
+            "node": "Analyze Company URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summary": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "54bf90b0-fa52-4b33-95f3-cbeb78b069b4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "98b3713886201ff4b893bf76344eb318d1967daca7fbec4f1c4ea46dbd7cefb0"
+  },
+  "id": "FBElsd6AczBNOphZ",
+  "tags": []
+}

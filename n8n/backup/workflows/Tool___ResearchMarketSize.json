@@ -1,0 +1,101 @@
+{
+  "name": "Tool - ResearchMarketSize",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"text\": \"a string\"\n}"
+      },
+      "id": "6430aa6f-cae3-4066-8a86-071cfa3cde70",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        260,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=- Business idea: {{ $json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=## ROLE\nYou are a business consultant that is evaluating an early stage business idea and providing analysis and insights into if and how I should proceed with executing this business.\n\n## TASK\nExtrapolate the relevant industry that this business idea should focus on and perform research to estimate the market size in terms of Total Addressable Market (GBP and number of people)."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        480,
+        340
+      ],
+      "id": "93ce7d41-3c03-4b29-9c75-5ba764ac39d6",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-5-haiku-20241022",
+          "mode": "list",
+          "cachedResultName": "Claude 3.5 Haiku"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        560
+      ],
+      "id": "c335a381-ea3f-4af5-a9a9-1810d699e50c",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "mdraxQ9KyOfR1Zni",
+          "name": "Anthropic API Key"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "83d2864d-4bbe-471e-82d5-807b2fa4dc48",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "198a32ea450466a1d32b22351ad2291a0ff5a2ef214d21f9eb9338e11d2d85b5"
+  },
+  "id": "pKrUpIo4KdrK7WeY",
+  "tags": []
+}

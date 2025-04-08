@@ -1,0 +1,367 @@
+{
+  "name": "Free API",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://zenquotes.io/api/random",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -720,
+        -340
+      ],
+      "id": "c29a8d01-6a48-46f8-8332-14417d21d39d",
+      "name": "Zenquotes Quote"
+    },
+    {
+      "parameters": {
+        "content": "Quotes",
+        "height": 220,
+        "width": 920
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -800,
+        -380
+      ],
+      "typeVersion": 1,
+      "id": "b8c43aa6-48c2-4a43-95b6-e680da329f40",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "url": "https://endpoint.api2.news/techcrunch",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -720,
+        -80
+      ],
+      "id": "9bd0c21b-affb-44c6-a67e-3158575ddfff",
+      "name": "Endpoint News"
+    },
+    {
+      "parameters": {
+        "content": "News",
+        "height": 220,
+        "width": 920
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -800,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "aaaf7555-8972-47b3-a407-4888d4f10ba1",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "url": "https://api.first.org/data/v1/news",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -500,
+        -80
+      ],
+      "id": "3deb8cee-0c1d-48f9-b064-6a4ca3bddb82",
+      "name": "first.org news"
+    },
+    {
+      "parameters": {
+        "url": "https://elonmu.sh/api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -300,
+        -80
+      ],
+      "id": "0a90d718-f6c1-498a-bc87-3a1622516503",
+      "name": "elon musk news"
+    },
+    {
+      "parameters": {
+        "content": "Available source for,\nhttps://endpoint.api2.news/{source}\n\njust change the {source} with the real one.\n\nsources:\nBBC\nTOI\nTechCrunch\nNYT\nCNN\nGoogle News\nWSJ\nABC\nArstechnica\nBusiness Insider\nBloomberg\nBuzzfeed\nCBC\nCBS\nEngadget\nMashable\nNationalReview\nNBC\nnews24\nWashington Post\nWired\nTime\nYahoo News",
+        "height": 580,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1100,
+        -140
+      ],
+      "id": "f05ee67b-eeee-4140-b232-e709387b8139",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "url": "https://gomezmig03.github.io/MotivationalAPI/en.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -480,
+        -340
+      ],
+      "id": "964146b9-6586-47f9-8aa4-8cb4d4cb7a6c",
+      "name": "Motivational Quotes"
+    },
+    {
+      "parameters": {
+        "content": "Text to image",
+        "height": 220,
+        "width": 280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -800,
+        140
+      ],
+      "typeVersion": 1,
+      "id": "229c6e3c-b386-4312-86a7-330bec9a7175",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://image.pollinations.ai/prompt/your text goes here",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "width",
+              "value": "1000"
+            },
+            {
+              "name": "height",
+              "value": "1500"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -720,
+        200
+      ],
+      "id": "d0c2bfd8-a313-4079-9a95-fdbe3e4215d0",
+      "name": "text to image"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1060,
+        -320
+      ],
+      "id": "5b50a784-7139-4b70-bbe1-019d134c0465",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://api.worldnewsapi.com/top-news",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "source-country",
+              "value": "us"
+            },
+            {
+              "name": "language",
+              "value": "en"
+            },
+            {
+              "name": "date",
+              "value": "={{ $now.format('yyyy-MM-dd') }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "your api key"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -100,
+        -80
+      ],
+      "id": "5150d0d6-683e-4101-8e63-5f2bbb0297ea",
+      "name": "worldnewsapi"
+    },
+    {
+      "parameters": {
+        "content": "Get your api key for wprldnewsapi here,\n\nhttps://worldnewsapi.com/console/\n\n",
+        "height": 120,
+        "width": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        140,
+        -120
+      ],
+      "typeVersion": 1,
+      "id": "0d7d1705-3add-40bb-af32-dea563c54800",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "Web scraping",
+        "height": 220,
+        "width": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        140
+      ],
+      "typeVersion": 1,
+      "id": "d5f707ac-077d-4f4b-935d-d2561f80567b",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "Web search",
+        "height": 220,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -180,
+        140
+      ],
+      "typeVersion": 1,
+      "id": "c6bf193b-b105-4311-83eb-1a588a257e12",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "url": "https://api.apileague.com/extract-content",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "enter url to scrape data"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "enter your api key from api league"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -420,
+        200
+      ],
+      "id": "6e0e0d24-2a5f-48c8-9e1e-9df72bf14326",
+      "name": "web scraping"
+    },
+    {
+      "parameters": {
+        "url": "https://api.apileague.com/search-web",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "enter query to search"
+            },
+            {
+              "name": "number",
+              "value": "1"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "your api key from api league"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -100,
+        200
+      ],
+      "id": "796a312e-1e44-46cc-bd31-581d36b5bc9b",
+      "name": "web search"
+    },
+    {
+      "parameters": {
+        "content": "Access more api,\n\nhttps://apileague.com/console/",
+        "height": 120,
+        "width": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        140,
+        140
+      ],
+      "typeVersion": 1,
+      "id": "7c122a74-ba48-4d1b-9f09-fcbd230b416d",
+      "name": "Sticky Note7"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "web search": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "43d88558-f14c-49a2-aa8c-042a7691c2ea",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79e322bc11d1a272c709c7192c88bd3fedebd533a1a50af992099aebf74e2010"
+  },
+  "id": "Rmwiw3Cry8kQizah",
+  "tags": []
+}

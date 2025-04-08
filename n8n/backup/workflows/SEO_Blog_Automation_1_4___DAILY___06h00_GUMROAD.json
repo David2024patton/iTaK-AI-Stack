@@ -1,0 +1,2030 @@
+{
+  "name": "SEO Blog Automation 1.4 - DAILY @ 06h00 GUMROAD",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1640,
+        -120
+      ],
+      "id": "45886522-9e8c-43a4-8902-5df990e8758a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "content": "SCHEDULER",
+        "height": 220,
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1680,
+        -180
+      ],
+      "id": "d06231e9-9d4c-4d4d-b2cf-99d56a60bdcc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "KEYWORD CONTENT",
+        "height": 220,
+        "width": 170
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1480,
+        -180
+      ],
+      "id": "91000c5c-a226-4ef6-88e6-b0625708c2d5",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "PERPLEXITY DEEP RESEARCHER",
+        "height": 1680,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        -180
+      ],
+      "id": "b5708d3e-d1c5-4fcb-acf8-de65fcceb21d",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1xLc3FTQzWGQZZ3CASk7BSWRI3Ua76wTZDVucnsBcJzk",
+          "mode": "list",
+          "cachedResultName": "KEYWORD RESEARCH",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xLc3FTQzWGQZZ3CASk7BSWRI3Ua76wTZDVucnsBcJzk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1071094313,
+          "mode": "list",
+          "cachedResultName": "PILLAR POST #1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xLc3FTQzWGQZZ3CASk7BSWRI3Ua76wTZDVucnsBcJzk/edit#gid=1071094313"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Completed",
+              "lookupValue": "NO"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1440,
+        -120
+      ],
+      "id": "d0f5a65b-8e77-4d2b-a833-e9147471869d",
+      "name": "Keyword Research",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zIOaK4e4SHXjg12w",
+          "name": "YOUR GOOGLE SHEETS ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "CONTENT PLANNER",
+        "height": 220,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -920,
+        -420
+      ],
+      "id": "6b6277b4-4b97-40ed-aa46-1c1e0161f6e5",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o1",
+          "mode": "list",
+          "cachedResultName": "O1"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a team that creates world class blog posts. \n\nFor each new blog post project, you are provided with a list of keywords and search intent. \n\n- Keywords: The keywords are to what the blog post is meant to rank for. They are scattered throughout the blog and define the topic of the blog post. \n\n- Search intent: The search intent recognises the intent of the user when searching up the keyword which defines be the theme of the blog post, so they click on our blog to satisfy their search. \n\n- Primary keyword: Out of the keywords, there is one keyword known as the primary keyword. The primary keyword will go in the title and first few sentences. It is important that the topic of the blog post is related to the primary keyword so that you can place it into the title and introduction naturally. \n\nGiven a list of keywords and search intent, your job is to understand the goal of the blog post, identify the thought process behind the flow of the blog post and come up with a preliminary plan for the post. \n\nYour output must: \n\n- Recognise the discussion points of the blog post.\n\nYou must ensure that the plan created satisfies the search intent and revolves directly around the given keywords. \n\nWhen making the plan keep in mind that all keywords must be used in the final blog post. \n\nThe final goal of the project is to create a high quality, high value, highly relevant blog post that will satisfy the users search intent and give them everything they need to know about the topic. \n\nA new project just came across your desk with below keywords and search intent:\n\nKeywords: \n{{ $('Keyword Research').item.json.Keywords }}\n\nSearch intent: \n{{ $('Keyword Research').item.json.Intent }}\n\nPrimary keyword: \n{{ $('Keyword Research').item.json['Primary Keyword'] }}\n\nCreate the preliminary plan. The plan should ensure a good flow on ideas from paragraph to paragraph. The introductory paragraph should give the reader a good overview of what the article's contents are and state what benefit the reader will enjoy after reading the article (e.g. \"By the end of this article you will have a better idea of x\", \"Understanding these core concepts will totally equip you to tackle x\", \"The most successful people in this field have a solid grasp of these concepts and by the end of this article, so will you\"). The conclusion should summarise the content of all entire article.\n\nYour output response should be in .JSON like this:\n\n{\nIntroductory Paragraph: \"<para> 60 - 150 Word Introductory Paragraph Written With AIDA Technique. Only provide the paragraph. Do not say 'Attention', 'Desire', 'Interest', or 'Action'. </para>\"\n\"H2 A\": \"<h2> A Compelling Heading which Includes {{ $('Keyword Research').item.json['Primary Keyword'] }} </h2>\"\n\"H2 A Paragraph\": \"<para> 60 - 150 Word Paragraph. You may include an unstructured list where appropriate. </para>\"\n\"H2 B\": \"<h2> A Compelling Heading which Includes {{ $('Keyword Research').item.json['Primary Keyword'] }} </h2>\"\n\"H2 B Paragraph\": \"<para> 60 - 150 Word Paragraph. </para>\"\n\"H2 C\": \"<h2> A Compelling Heading which Includes ONLY ONE OF THE FOLLOWING KEYWORDS {{ $('Keyword Research').item.json.Keywords }} </h2>\"\n\"H2 C Paragraph\": \"<<para> 60 - 150 Word Paragraph. You may include an unstructured list where appropriate. </para>\"\n\"H2 D\": \"<h2> A Compelling Heading which Includes ONLY ONE OF THE FOLLOWING KEYWORDS {{ $('Keyword Research').item.json.Keywords }} </h2>\"\n\"H2 D Paragraph\": \"<para> 60 - 150 Word Paragraph.  </para>\"\n\"H2 E\": \"<h2> A Compelling Heading which Includes ONLY ONE OF THE FOLLOWING KEYWORDS {{ $('Keyword Research').item.json.Keywords }} </h2>\"\n\"H2 E Paragraph\": \"<para> 60 - 150 Word Paragraph. You may include an unstructured list where appropriate. </para>\"\n\"H2 F\": \"<h2> A Compelling Heading which Includes ONLY ONE OF THE FOLLOWING KEYWORDS {{ $('Keyword Research').item.json.Keywords }} </h2>\"\n\"H2 F Paragraph\": \"<para> 60 - 150 Word Paragraph. </para>\"\n\"H2 G\": \"<h2> A Compelling Heading which Includes ONLY ONE OF THE FOLLOWING KEYWORDS {{ $('Keyword Research').item.json.Keywords }} </h2>\"\n\"H2 G Paragraph\": \"<para> 60 - 150 Word Paragraph. You may include an unstructured list where appropriate. </para>\"\n\"H2 H\": \"<h2> A Compelling Heading which Includes ONLY ONE OF THE FOLLOWING KEYWORDS {{ $('Keyword Research').item.json.Keywords }} </h2>\"\n\"H2 H Paragraph\": \"<para> 60 - 150 Word Paragraph. </para>\"\n\"H2 I\": \"<h2> A Compelling Heading which Includes ONLY ONE OF THE FOLLOWING KEYWORDS {{ $('Keyword Research').item.json.Keywords }} </h2>\"\n\"H2 I Paragraph\": \"<para> 60 - 150 Word Paragraph. You may include an unstructured list where appropriate. </para>\"\n\"H2 Conclusion\": \"<h2> A Consclusory Heading which Includes {{ $('Keyword Research').item.json['Primary Keyword'] }} </h2>\"\n\"Conclusory Paragraph\": \"<para> 60 - 150 Word Conclusory Paragraph Written With AIDA Technique. Only provide the paragraph. Do not say 'Attention', 'Desire', 'Interest', or 'Action'. </para>\"\n}\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION. ALWAYS INLCUDE <h2></h2> FOR H2 VARIABLES. ALWAYS INCLUDE <para></para> FOR PARAGRAPH VARIABLES.\n\n\n"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -900,
+        -360
+      ],
+      "id": "2a410ac4-62f9-4fba-bb3c-a5732ec6378e",
+      "name": "Content Planner",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are part of a research team within the content department for Wasson.ai - an AI Consultancy. You excel at conducting thorough and exhaustive research, finding the most reputable resources, and drafting the most detailed summaries to support the content writers whom depend on you.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"You are conducting research for a blog article. You will conduct research which supports this section of the article: {{ $('Content Planner').item.json.message.content['H2 A'] }}{{ $('Content Planner').item.json.message.content['H2 A Paragraph'] }}.\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -860,
+        -140
+      ],
+      "id": "1b06cc46-77f1-440c-a70d-7d44ea83d353",
+      "name": "Perplexity Researcher H2A",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AEyOV11V3N0e84KE",
+          "name": "YOUR PERPLEXITY ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are part of a research team within the content department for Wasson.ai - an AI Consultancy. You excel at conducting thorough and exhaustive research, finding the most reputable resources, and drafting the most detailed summaries to support the content writers whom depend on you.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"You are conducting research for a blog article. You will conduct research which supports this section of the article: {{ $('Content Planner').item.json.message.content['H2 B'] }}{{ $('Content Planner').item.json.message.content['H2 B Paragraph'] }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -860,
+        40
+      ],
+      "id": "e8fec6d9-a733-45c3-bfba-db981cfcb4ff",
+      "name": "Perplexity Researcher H2B",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AEyOV11V3N0e84KE",
+          "name": "YOUR PERPLEXITY ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are part of a research team within the content department for Wasson.ai - an AI Consultancy. You excel at conducting thorough and exhaustive research, finding the most reputable resources, and drafting the most detailed summaries to support the content writers whom depend on you.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"You are conducting research for a blog article. You will conduct research which supports this section of the article: {{ $('Content Planner').item.json.message.content['H2 C'] }}{{ $('Content Planner').item.json.message.content['H2 C Paragraph'] }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -860,
+        220
+      ],
+      "id": "2632e547-54a9-4c91-91cc-b2b7aaff23ac",
+      "name": "Perplexity Researcher H2C",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AEyOV11V3N0e84KE",
+          "name": "YOUR PERPLEXITY ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are part of a research team within the content department for Wasson.ai - an AI Consultancy. You excel at conducting thorough and exhaustive research, finding the most reputable resources, and drafting the most detailed summaries to support the content writers whom depend on you.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"You are conducting research for a blog article. You will conduct research which supports this section of the article: {{ $('Content Planner').item.json.message.content['H2 D'] }}{{ $('Content Planner').item.json.message.content['H2 D Paragraph'] }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -860,
+        400
+      ],
+      "id": "25f5ff70-5ff5-497e-a78e-82bbc3467731",
+      "name": "Perplexity Researcher H2D",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AEyOV11V3N0e84KE",
+          "name": "YOUR PERPLEXITY ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are part of a research team within the content department for Wasson.ai - an AI Consultancy. You excel at conducting thorough and exhaustive research, finding the most reputable resources, and drafting the most detailed summaries to support the content writers whom depend on you.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"You are conducting research for a blog article. You will conduct research which supports this section of the article: {{ $('Content Planner').item.json.message.content['H2 E'] }}{{ $('Content Planner').item.json.message.content['H2 E Paragraph'] }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -860,
+        580
+      ],
+      "id": "fdd9fd6b-cfea-420b-bac2-54eb587e65e4",
+      "name": "Perplexity Researcher H2E",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AEyOV11V3N0e84KE",
+          "name": "YOUR PERPLEXITY ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are part of a research team within the content department for Wasson.ai - an AI Consultancy. You excel at conducting thorough and exhaustive research, finding the most reputable resources, and drafting the most detailed summaries to support the content writers whom depend on you.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"You are conducting research for a blog article. You will conduct research which supports this section of the article: {{ $('Content Planner').item.json.message.content['H2 F'] }}{{ $('Content Planner').item.json.message.content['H2 F Paragraph'] }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -860,
+        760
+      ],
+      "id": "d4061a0c-eb75-43f5-b904-0f7ca09541be",
+      "name": "Perplexity Researcher H2F",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AEyOV11V3N0e84KE",
+          "name": "YOUR PERPLEXITY ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are part of a research team within the content department for Wasson.ai - an AI Consultancy. You excel at conducting thorough and exhaustive research, finding the most reputable resources, and drafting the most detailed summaries to support the content writers whom depend on you.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"You are conducting research for a blog article. You will conduct research which supports this section of the article: {{ $('Content Planner').item.json.message.content['H2 G'] }}{{ $('Content Planner').item.json.message.content['H2 G Paragraph'] }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -860,
+        940
+      ],
+      "id": "9c3b2455-0b26-4521-b671-8a5960becfcd",
+      "name": "Perplexity Researcher H2G",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AEyOV11V3N0e84KE",
+          "name": "YOUR PERPLEXITY ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are part of a research team within the content department for Wasson.ai - an AI Consultancy. You excel at conducting thorough and exhaustive research, finding the most reputable resources, and drafting the most detailed summaries to support the content writers whom depend on you.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"You are conducting research for a blog article. You will conduct research which supports this section of the article: {{ $('Content Planner').item.json.message.content['H2 H'] }}{{ $('Content Planner').item.json.message.content['H2 H Paragraph'] }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -860,
+        1120
+      ],
+      "id": "27dc5285-2fb7-40d1-94eb-83e298fd9daa",
+      "name": "Perplexity Researcher H2H",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AEyOV11V3N0e84KE",
+          "name": "YOUR PERPLEXITY ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are part of a research team within the content department for Wasson.ai - an AI Consultancy. You excel at conducting thorough and exhaustive research, finding the most reputable resources, and drafting the most detailed summaries to support the content writers whom depend on you.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"You are conducting research for a blog article. You will conduct research which supports this section of the article: {{ $('Content Planner').item.json.message.content['H2 I'] }}{{ $('Content Planner').item.json.message.content['H2 I Paragraph'] }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -860,
+        1300
+      ],
+      "id": "833c79c6-6d80-4dea-b0db-5860483f07db",
+      "name": "Perplexity Researcher H2I",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AEyOV11V3N0e84KE",
+          "name": "YOUR PERPLEXITY ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "SEO COPY EDITORS",
+        "height": 1880,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        -180
+      ],
+      "id": "ec54bbd4-71e0-4929-a541-e8061a89b771",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "INTERNAL HYPERLINK SCRAPER",
+        "height": 540,
+        "width": 340
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        -180
+      ],
+      "id": "0cbec601-3567-4f12-a1f0-0ea9f7c255b8",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, the research team whom supplies you with thorough and exhaustive research. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the research provided by your researcher, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 2 of the hyperlinks provided in the provided research in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: \"<a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\".\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['H2 A Paragraph'] }}\n\nYour article section's research: \n{{ $('Fix Links H2A').item.json.research }}\n\nYour output response should be in .JSON like this:\n\n{\n\"H2 A Paragraph COPY EDITED\": \"<p>60 - 150 Word Paragraph. You may include an unstructured list where appropriate.</p>\"\n}\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        0
+      ],
+      "id": "cd1e6090-848c-4ae7-b176-bf88c4792f99",
+      "name": "Copy Editor H2A",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, and the sitemap links list. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the sitemap by your SEO expert, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 1-3 of the hyperlinks provided in the provided sitemap in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: <a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\n\nPrimary Keyword:\n{{ $('Keyword Research').item.json['Primary Keyword'] }}\n\nKeyword Search Intent: \n{{ $('Keyword Research').item.json.Intent }}\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['Introductory Paragraph'] }}\n\nSitemap:\n{{ $('Aggregate Article URLs').item.json.loc }}\n\nYour output response should be in .JSON like this:\n\n{\n\"Introductory Paragraph COPY EDITED\": \"<p>0 - 150 Word Introductory Paragraph Written With AIDA Technique. Only provide the paragraph. Do not say 'Attention', 'Desire', 'Interest', or 'Action'.</p>\"\n}\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        -140
+      ],
+      "id": "55ed07a6-ba43-4ddb-9ade-ce2e211caa27",
+      "name": "Copy Editor Intro",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, and the sitemap links list. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the sitemap by your SEO expert, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 1-3 of the hyperlinks provided in the provided sitemap in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: <a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['Conclusory Paragraph'] }}\n\nSitemap:\n{{ $('Aggregate Article URLs').item.json.loc }}\n\nYour output response should be in .JSON like this:\n\n{\n\"Conclusory Paragraph COPY EDITED\": \"<para> 60 - 150 Word Introductory Paragraph Written With AIDA Technique. Only provide the paragraph. Do not say 'Attention', 'Desire', 'Interest', or 'Action'. </para>\"\n}\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        1580
+      ],
+      "id": "979675b4-d497-47ba-8e4f-b7d088916705",
+      "name": "Copy Editor Conc",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Create a slug for the following blog post: \n{{ $json.message.content }}\n\nA slug in a blog post is the part of the URL that comes after the domain name and identifies a specific page. It is typically a short, descriptive phrase that summarizes the content of the post, making it easier for users and search engines to understand what the page is about. For example, in the URL www.example.com/intelligent-agents, the slug is intelligent-agents. A good slug is concise, contains relevant keywords, and avoids unnecessary words to improve readability and SEO. \n\nThe slug must be 4 or 5 words max and must include the primary keyword of the blog post which is: {{ $('Keyword Research').item.json['Primary Keyword'] }}.\n\nYour output must be the slug and nothing else so that I can copy and paste your output and put it at the end of my blog post URL to post it right away. "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        -620
+      ],
+      "id": "3a69e501-fabc-4c63-8374-7727797d64aa",
+      "name": "Slug",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-2024-11-20",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-2024-11-20"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Create a good meta description for the following blog post: \n{{ $('Content Planner').item.json.message.content }}\n\nA good meta description for a blog post that is SEO-optimized should:\n- Be Concise: Stick to 120-160 characters to ensure the full description displays in search results. \n- Include Keywords: Incorporate primary keywords naturally to improve visibility and relevance to search queries.\n\nPrimary keyword = {{ $('Keyword Research').item.json['Primary Keyword'] }}\n\nConsider the search intent = {{ $('Keyword Research').item.json.Intent }}\n\n- Provide Value: Clearly describe what the reader will learn or gain by clicking the link. \n\n- Be Engaging: Use persuasive language, such as action verbs or a question, to encourage clicks. \n\n- Align with Content: Ensure the description accurately reflects the blog post to meet user expectations and reduce bounce rates. \n\n- Do not exceed 120 characters\n\n- Use an active voice and make it actionable\n\n- Include a call to action\n\n- Use the primary keyword\n\n- Show specifications when needed\n\n- Make sure it matches the content of the page\n\n- Make it unique\n\n- Do not use quotation marks, parentheses, brackets or any punction marks other than a period (aka fullstop) at the end of your sentences.\n\n- Your output must only be the meta description and nothing else. \n\nExamples of good meta-descriptions - use these as a reference when writing:\n- In this post, we'll explore what makes a good meta description. We'll also share 30 inspirational meta description examples. Check them out.\n- Automate development, APIs & workflows with Agentic AI. Save time, deliver faster. Smart AI agents that act, adapt & optimise tasks and processes.\n- The global market for AI consultants is growing at a rate of 39% annually and is expected to reach $630 billion by 2028.\n- An AI consultant is a professional who helps businesses integrate artificial intelligence technologies into their operations.\n- FLUX.1 dev AI Image Generator can generate a wide variety of high-quality images based on text prompts, from photorealistic scenes to abstract art."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        -340
+      ],
+      "id": "bc2b5985-add8-481c-b6f4-3952bcdf5976",
+      "name": "Meta description",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-2024-11-20",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-2024-11-20"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Extract the blog post title from the following blog post: \n{{ $('Content Planner').item.json.message.content['Introductory Paragraph'] }}\n{{ $('Content Planner').item.json.message.content['H2 A'] }}\n{{ $('Content Planner').item.json.message.content['H2 A Paragraph'] }}\n{{ $('Content Planner').item.json.message.content['H2 B'] }}\n{{ $('Content Planner').item.json.message.content['H2 B Paragraph'] }}\n{{ $('Content Planner').item.json.message.content['H2 C'] }}\n{{ $('Content Planner').item.json.message.content['H2 C Paragraph'] }}\n{{ $('Content Planner').item.json.message.content['H2 D'] }}\n{{ $('Content Planner').item.json.message.content['H2 D Paragraph'] }}\n{{ $('Content Planner').item.json.message.content['H2 E'] }}\n{{ $('Content Planner').item.json.message.content['H2 E Paragraph'] }}\n{{ $('Content Planner').item.json.message.content['H2 F'] }}\n{{ $('Content Planner').item.json.message.content['H2 F Paragraph'] }}\n{{ $('Content Planner').item.json.message.content['H2 G'] }}\n{{ $('Content Planner').item.json.message.content['H2 G Paragraph'] }}\n{{ $('Content Planner').item.json.message.content['H2 H'] }}\n{{ $('Content Planner').item.json.message.content['H2 H Paragraph'] }}\n{{ $('Content Planner').item.json.message.content['H2 I'] }}\n{{ $('Content Planner').item.json.message.content['H2 I Paragraph'] }}\n{{ $('Content Planner').item.json.message.content['Conclusory Paragraph'] }}\n\nThe blog post title must include the primary keyword ({{ $('Keyword Research').item.json['Primary Keyword'] }}) and must inform the users right away of what they can expect from reading the blog post. \n\n- Don't put the output in \"\". The output should just text with no markdown or formatting. \n\n- Titles must always begin with the ⚡ emoji\n\n- Examples of good titles: \"⚡Building Effective AI Agents: A Strategic Guide for Business Leaders\", \"⚡ ULTIMATE AI Agents Showdown: Manus vs OpenManus vs 20 More\"\n\n- Your output must only be the blog post title and nothing else. \n\n- Always write the title in title case.\n"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        -480
+      ],
+      "id": "651bba5b-ce79-4be8-9fd7-adb50ca8bb0e",
+      "name": "Title",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "SEO ASSISTANTS",
+        "height": 480,
+        "width": 300
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        -680
+      ],
+      "id": "b0a001a0-f33b-45b1-b1a5-19bf1edd4a17",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "WORDPRESS CONTENT MANAGER",
+        "height": 400,
+        "width": 260
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -180
+      ],
+      "id": "431ad288-6906-4872-b78c-da2d15403fe7",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Title').item.json.message.content.title }}",
+        "additionalFields": {
+          "authorId": 3,
+          "content": "={{ $('Copy Editor Intro').item.json.message.content['Introductory Paragraph COPY EDITED'] }}\n{{ $('Content Planner').item.json.message.content['H2 A'] }}\n{{ $('Copy Editor H2A').item.json.message.content['H2 A Paragraph COPY EDITED'] }}\n{{ $('Content Planner').item.json.message.content['H2 B'] }}\n{{ $('Copy Editor H2B').item.json.message.content['H2 B Paragraph COPY EDITED'] }}\n{{ $('Content Planner').item.json.message.content['H2 C'] }}\n{{ $('Copy Editor H2C').item.json.message.content['H2 C Paragraph COPY EDITED'] }}\n{{ $('Content Planner').item.json.message.content['H2 D'] }}\n{{ $('Copy Editor H2D').item.json.message.content['H2 D Paragraph COPY EDITED'] }}\n{{ $('Content Planner').item.json.message.content['H2 E'] }}\n{{ $('Copy Editor H2E').item.json.message.content['H2 E Paragraph COPY EDITED'] }}\n{{ $('Content Planner').item.json.message.content['H2 F'] }}\n{{ $('Copy Editor H2F').item.json.message.content['H2 F Paragraph COPY EDITED'] }}\n{{ $('Content Planner').item.json.message.content['H2 G'] }}\n{{ $('Copy Editor H2G').item.json.message.content['H2 G Paragraph COPY EDITED'] }}\n{{ $('Content Planner').item.json.message.content['H2 H'] }}\n{{ $('Copy Editor H2H').item.json.message.content['H2 H Paragraph COPY EDITED'] }}\n{{ $('Content Planner').item.json.message.content['H2 I'] }}\n{{ $('Copy Editor H2I').item.json.message.content['H2 I Paragraph COPY EDITED'] }}\n{{ $json.message.content['Conclusory Paragraph COPY EDITED'] }}\n",
+          "slug": "={{ $('Slug').item.json.message.content }}",
+          "commentStatus": "closed",
+          "tags": [
+            19
+          ],
+          "postTemplate": {
+            "values": {
+              "template": "elementor_theme"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        -120
+      ],
+      "id": "c2a85729-55f2-47a6-9e0a-1eb5e288ffe3",
+      "name": "Wordpress Post Creation",
+      "credentials": {
+        "wordpressApi": {
+          "id": "e0mwwCta4eVXaB6i",
+          "name": "YOUR WORDPRESS ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ \n  (function(content, citations) {\n    let updatedContent = content;\n    // Loop through each citation and replace occurrences of [1], [2], ... with the source text\n    for (let i = 0; i < citations.length; i++) {\n      // Build the target pattern, e.g. [1], [2], etc.\n      const pattern = \"[\" + (i + 1) + \"]\";\n      // Build the replacement text\n      const replacement = \" - source: \" + citations[i];\n      \n      // Perform the replacement\n      updatedContent = updatedContent.replaceAll(pattern, replacement);\n    }\n    return updatedContent;\n  })($json.choices[0].message.content, $json.citations)\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        -100
+      ],
+      "id": "8965d4e0-2705-4ad7-8a31-f3370772885f",
+      "name": "Fix Links H2A"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ \n  (function(content, citations) {\n    let updatedContent = content;\n    // Loop through each citation and replace occurrences of [1], [2], ... with the source text\n    for (let i = 0; i < citations.length; i++) {\n      // Build the target pattern, e.g. [1], [2], etc.\n      const pattern = \"[\" + (i + 1) + \"]\";\n      // Build the replacement text\n      const replacement = \" - source: \" + citations[i];\n      \n      // Perform the replacement\n      updatedContent = updatedContent.replaceAll(pattern, replacement);\n    }\n    return updatedContent;\n  })($json.choices[0].message.content, $json.citations)\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        80
+      ],
+      "id": "70875c34-6225-4739-8ec8-bf4d81a8f25e",
+      "name": "Fix Links H2B"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ \n  (function(content, citations) {\n    let updatedContent = content;\n    // Loop through each citation and replace occurrences of [1], [2], ... with the source text\n    for (let i = 0; i < citations.length; i++) {\n      // Build the target pattern, e.g. [1], [2], etc.\n      const pattern = \"[\" + (i + 1) + \"]\";\n      // Build the replacement text\n      const replacement = \" - source: \" + citations[i];\n      \n      // Perform the replacement\n      updatedContent = updatedContent.replaceAll(pattern, replacement);\n    }\n    return updatedContent;\n  })($json.choices[0].message.content, $json.citations)\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        260
+      ],
+      "id": "dddc7fb8-4c70-4e93-b748-f8e7d765a220",
+      "name": "Fix Links H2C"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ \n  (function(content, citations) {\n    let updatedContent = content;\n    // Loop through each citation and replace occurrences of [1], [2], ... with the source text\n    for (let i = 0; i < citations.length; i++) {\n      // Build the target pattern, e.g. [1], [2], etc.\n      const pattern = \"[\" + (i + 1) + \"]\";\n      // Build the replacement text\n      const replacement = \" - source: \" + citations[i];\n      \n      // Perform the replacement\n      updatedContent = updatedContent.replaceAll(pattern, replacement);\n    }\n    return updatedContent;\n  })($json.choices[0].message.content, $json.citations)\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        440
+      ],
+      "id": "a181c26d-4b87-4c63-b06c-8518db7c6ff0",
+      "name": "Fix Links H2D"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ \n  (function(content, citations) {\n    let updatedContent = content;\n    // Loop through each citation and replace occurrences of [1], [2], ... with the source text\n    for (let i = 0; i < citations.length; i++) {\n      // Build the target pattern, e.g. [1], [2], etc.\n      const pattern = \"[\" + (i + 1) + \"]\";\n      // Build the replacement text\n      const replacement = \" - source: \" + citations[i];\n      \n      // Perform the replacement\n      updatedContent = updatedContent.replaceAll(pattern, replacement);\n    }\n    return updatedContent;\n  })($json.choices[0].message.content, $json.citations)\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        620
+      ],
+      "id": "ae1786f5-25c2-42d4-8124-dfbfd96d8187",
+      "name": "Fix Links H2E"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ \n  (function(content, citations) {\n    let updatedContent = content;\n    // Loop through each citation and replace occurrences of [1], [2], ... with the source text\n    for (let i = 0; i < citations.length; i++) {\n      // Build the target pattern, e.g. [1], [2], etc.\n      const pattern = \"[\" + (i + 1) + \"]\";\n      // Build the replacement text\n      const replacement = \" - source: \" + citations[i];\n      \n      // Perform the replacement\n      updatedContent = updatedContent.replaceAll(pattern, replacement);\n    }\n    return updatedContent;\n  })($json.choices[0].message.content, $json.citations)\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        800
+      ],
+      "id": "a3783c97-463a-4250-9e9a-ef83dc194146",
+      "name": "Fix Links H2F"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ \n  (function(content, citations) {\n    let updatedContent = content;\n    // Loop through each citation and replace occurrences of [1], [2], ... with the source text\n    for (let i = 0; i < citations.length; i++) {\n      // Build the target pattern, e.g. [1], [2], etc.\n      const pattern = \"[\" + (i + 1) + \"]\";\n      // Build the replacement text\n      const replacement = \" - source: \" + citations[i];\n      \n      // Perform the replacement\n      updatedContent = updatedContent.replaceAll(pattern, replacement);\n    }\n    return updatedContent;\n  })($json.choices[0].message.content, $json.citations)\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        980
+      ],
+      "id": "f4602a70-d0b0-40b5-85cd-16b334a0780e",
+      "name": "Fix Links H2G"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ \n  (function(content, citations) {\n    let updatedContent = content;\n    // Loop through each citation and replace occurrences of [1], [2], ... with the source text\n    for (let i = 0; i < citations.length; i++) {\n      // Build the target pattern, e.g. [1], [2], etc.\n      const pattern = \"[\" + (i + 1) + \"]\";\n      // Build the replacement text\n      const replacement = \" - source: \" + citations[i];\n      \n      // Perform the replacement\n      updatedContent = updatedContent.replaceAll(pattern, replacement);\n    }\n    return updatedContent;\n  })($json.choices[0].message.content, $json.citations)\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        1160
+      ],
+      "id": "e400ca08-ff0b-47a6-8cc0-26a2e4301437",
+      "name": "Fix Links H2H"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "23b8e8c4-9191-415a-9661-1b60d413528a",
+              "name": "research",
+              "value": "={{ \n  (function(content, citations) {\n    let updatedContent = content;\n    // Loop through each citation and replace occurrences of [1], [2], ... with the source text\n    for (let i = 0; i < citations.length; i++) {\n      // Build the target pattern, e.g. [1], [2], etc.\n      const pattern = \"[\" + (i + 1) + \"]\";\n      // Build the replacement text\n      const replacement = \" - source: \" + citations[i];\n      \n      // Perform the replacement\n      updatedContent = updatedContent.replaceAll(pattern, replacement);\n    }\n    return updatedContent;\n  })($json.choices[0].message.content, $json.citations)\n}}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        1340
+      ],
+      "id": "27f849fc-8bf9-4e60-bb7e-6317a2baa72e",
+      "name": "Fix Links H2I"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, the research team whom supplies you with thorough and exhaustive research. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the research provided by your researcher, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 1-3 of the hyperlinks provided in the provided research in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: <a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['H2 B Paragraph'] }}\n\nYour article section's research: \n{{ $('Fix Links H2B').item.json.research }}\n\nYour output response should be in .JSON like this:\n\n{\n  \"H2 B Paragraph COPY EDITED\": \"<p>60 - 150 Word Paragraph. You may include an unstructured list where appropriate.</p>\"\n}\n\n\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        180
+      ],
+      "id": "a7bea6ca-ad01-4533-903a-a8e431a4424b",
+      "name": "Copy Editor H2B",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, the research team whom supplies you with thorough and exhaustive research. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the research provided by your researcher, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 1-3 of the hyperlinks provided in the provided research in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: <a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['H2 C Paragraph'] }}\n\nYour article section's research: \n{{ $('Fix Links H2C').item.json.research }}\n\nYour output response should be in .JSON like this:\n\n{\n  \"H2 C Paragraph COPY EDITED\": \"<p>60 - 150 Word Paragraph. You may include an unstructured list where appropriate.</p>\"\n}\n\n\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        360
+      ],
+      "id": "bd142762-3dd0-422a-8c61-b0bdbe5db2a8",
+      "name": "Copy Editor H2C",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, the research team whom supplies you with thorough and exhaustive research. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the research provided by your researcher, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 1-3 of the hyperlinks provided in the provided research in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: <a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['H2 D Paragraph'] }}\n\nYour article section's research: \n{{ $('Fix Links H2D').item.json.research }}\n\nYour output response should be in .JSON like this:\n\n{\n  \"H2 D Paragraph COPY EDITED\": \"<p>60 - 150 Word Paragraph. You may include an unstructured list where appropriate.</p>\"\n}\n\n\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        540
+      ],
+      "id": "c2136634-9f39-4af6-a8a6-0c8c291ffc9d",
+      "name": "Copy Editor H2D",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, the research team whom supplies you with thorough and exhaustive research. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the research provided by your researcher, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 1-3 of the hyperlinks provided in the provided research in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: <a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['H2 E Paragraph'] }}\n\nYour article section's research: \n{{ $('Fix Links H2E').item.json.research }}\n\nYour output response should be in .JSON like this:\n\n{\n  \"H2 E Paragraph COPY EDITED\": \"<p>60 - 150 Word Paragraph. You may include an unstructured list where appropriate.</p>\"\n}\n\n\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        720
+      ],
+      "id": "77d3dc09-ee12-436e-9f83-8318a5691692",
+      "name": "Copy Editor H2E",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, the research team whom supplies you with thorough and exhaustive research. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the research provided by your researcher, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 1-3 of the hyperlinks provided in the provided research in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: <a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['H2 F Paragraph'] }}\n\nYour article section's research: \n{{ $('Fix Links H2F').item.json.research }}\n\nYour output response should be in .JSON like this:\n\n{\n  \"H2 F Paragraph COPY EDITED\": \"<p>60 - 150 Word Paragraph. You may include an unstructured list where appropriate.</p>\"\n}\n\n\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        900
+      ],
+      "id": "d818068f-c543-42ff-8c62-4b67150f3cd1",
+      "name": "Copy Editor H2F",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, the research team whom supplies you with thorough and exhaustive research. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the research provided by your researcher, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 1-3 of the hyperlinks provided in the provided research in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: <a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['H2 G Paragraph'] }}\n\nYour article section's research: \n{{ $('Fix Links H2G').item.json.research }}\n\nYour output response should be in .JSON like this:\n\n{\n  \"H2 G Paragraph COPY EDITED\": \"<p>60 - 150 Word Paragraph. You may include an unstructured list where appropriate.</p>\"\n}\n\n\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        1080
+      ],
+      "id": "2a68e8a4-5b74-497d-b844-246096c6b2e3",
+      "name": "Copy Editor H2G",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, the research team whom supplies you with thorough and exhaustive research. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the research provided by your researcher, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 1-3 of the hyperlinks provided in the provided research in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: <a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['H2 H Paragraph'] }}\n\nYour article section's research: \n{{ $('Fix Links H2H').item.json.research }}\n\nYour output response should be in .JSON like this:\n\n{\n  \"H2 H Paragraph COPY EDITED\": \"<p>60 - 150 Word Paragraph. You may include an unstructured list where appropriate.</p>\"\n}\n\n\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        1260
+      ],
+      "id": "b2ab1813-39c6-4fcf-8a0f-e2456d1725b8",
+      "name": "Copy Editor H2H",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are part of a copy editing team within the content department for Wasson.ai - an AI Consultancy. \n\nYou depend on the content manager who supplies you with an intial content outline, the research team whom supplies you with thorough and exhaustive research. \n\nYou excel at ingesting research about often complex subject matter and distilling it into easily digestible, impactful copy which engages the reader. \n\nYour role in the copy editing team is to take the intial content draft provided by content manager, and the research provided by your researcher, and combine it into an expertly crafted blog section.\n\nYour writing style is inspired, but not overly influenced by the gonzo journalism of Hunter S Thompson. You never forgoe clarity for the sake of stylistic flourish.\n\nYour audience consists of professionals and high level executives, however, you must prioritise reading ease. Target a Grade 8 reading ability in order to maximise reader retention.\n\nYou MUST include 1-3 of the hyperlinks provided in the provided research in your copy. The hyperlinks should be distributed naturally in the copy and be anchored to appropriate text. For example: <a href=\"https://wasson.ai/ultimate-ai-agents-showdown-manus-vs-openmanus-15-more/\">ai agent platforms</a>\n\nThe full content plan:\n{{ $('Content Planner').item.json.message.content }}\n\nYour article section:\n{{ $('Content Planner').item.json.message.content['H2 I Paragraph'] }}\n\nYour article section's research: \n{{ $('Fix Links H2I').item.json.research }}\n\nYour output response should be in .JSON like this:\n\n{\n  \"H2 I Paragraph COPY EDITED\": \"<p>60 - 150 Word Paragraph. You may include an unstructured list where appropriate.</p>\"\n}\n\n\n\nDO NOT RESPOND IN ANYTHING OTHER THAN THIS .JSON FORMAT PROVIDED. DO NOT PROVIDE ANY EXPOSITION."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -560,
+        1440
+      ],
+      "id": "8e562da7-278c-4ba3-b985-d67e46ef8dd1",
+      "name": "Copy Editor H2I",
+      "credentials": {
+        "openAiApi": {
+          "id": "2AsZZsTqjG5YmLoh",
+          "name": "YOUR OPENAI ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "HUMAN IN THE LOOP",
+        "height": 240,
+        "width": 180
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        20,
+        -180
+      ],
+      "id": "b94484b5-109a-483c-93c2-c8c67e7190e5",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "sendTo": "paul@wasson.ai",
+        "subject": "=⚡NEW ARTICLE PENDING APPROVAL ⚡{{ $('Schedule Trigger').item.json['Day of week'] }} {{ $('Schedule Trigger').item.json['Day of month'] }} {{ $('Schedule Trigger').item.json.Month }} {{ $('Schedule Trigger').item.json.Year }}",
+        "emailType": "text",
+        "message": "=Please review the article below and publish once changes are made: \nwww.wasson.ai/{{ $json.slug }}\n\n{{ $json.link }}\n\n{{ $json.title.raw }}\n\n{{ $('Meta description').item.json.message.content }}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        60,
+        -120
+      ],
+      "id": "a39f8aa3-b6e7-40bf-8034-cca9886b9a60",
+      "name": "Gmail",
+      "webhookId": "e8415131-c87f-4721-9edb-04feb0dd931d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1yD6wdG9gEOXRJNj",
+          "name": "YOUR GMAIL ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "**COSTS ASSOCIATED WITH THIS WORKFLOW** \n\nPERPLEXITY: USD 0.50 = ZAR 9.10\nOPENAI: USD 0.24 = ZAR 4.37\n\nTOTALS: USD 0.74 = ZAR R13.47",
+        "height": 220,
+        "width": 740,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1680,
+        -420
+      ],
+      "id": "6fcb7239-c31e-4d8c-b69f-108acb41c73d",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "CONTENT COORDINATOR",
+        "height": 240,
+        "width": 360
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        220,
+        -180
+      ],
+      "id": "c46d009e-26e3-4104-8c6b-c7cb19c5d4a6",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1xLc3FTQzWGQZZ3CASk7BSWRI3Ua76wTZDVucnsBcJzk",
+          "mode": "list",
+          "cachedResultName": "KEYWORD RESEARCH",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xLc3FTQzWGQZZ3CASk7BSWRI3Ua76wTZDVucnsBcJzk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1071094313,
+          "mode": "list",
+          "cachedResultName": "PILLAR POST #1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xLc3FTQzWGQZZ3CASk7BSWRI3Ua76wTZDVucnsBcJzk/edit#gid=1071094313"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Primary Keyword": "={{ $('Keyword Research').item.json['Primary Keyword'] }}",
+            "Completed": "YES"
+          },
+          "matchingColumns": [
+            "Primary Keyword"
+          ],
+          "schema": [
+            {
+              "id": "Cluster",
+              "displayName": "Cluster",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Intent",
+              "displayName": "Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Primary Keyword",
+              "displayName": "Primary Keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Completed",
+              "displayName": "Completed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        260,
+        -120
+      ],
+      "id": "8db08c0e-735b-43c3-922b-d704efba2702",
+      "name": "Mark As Complete on Keyword Research",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zIOaK4e4SHXjg12w",
+          "name": "YOUR GOOGLE SHEETS ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1IQXntWUsDINb30ad4-KxAQYXbvBkQyIVVApbceZlDrU",
+          "mode": "list",
+          "cachedResultName": "COMPLETED ARTICLES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IQXntWUsDINb30ad4-KxAQYXbvBkQyIVVApbceZlDrU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "ARTICLES",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1IQXntWUsDINb30ad4-KxAQYXbvBkQyIVVApbceZlDrU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "URL": "=https://wasson.ai/{{ $('Slug').item.json.message.content }}",
+            "Keywords": "={{ $('Keyword Research').item.json.Keywords }}",
+            "Blog Title": "={{ $('Title').item.json.message.content.title }}",
+            "Summary": "={{ $('Meta description').item.json.message.content }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Blog Title",
+              "displayName": "Blog Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        -120
+      ],
+      "id": "4c91db63-92b7-41f1-a26b-f32a6fe62683",
+      "name": "Update Completed Articles",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zIOaK4e4SHXjg12w",
+          "name": "YOUR GOOGLE SHEETS ACCOUNT"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://YOURWEBSITE/post-sitemap.xml",
+        "options": {}
+      },
+      "id": "cfadc872-890f-44b1-a7ad-373d504fe61d",
+      "name": "Get Sitemap",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -1240,
+        -120
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "options": {
+          "ignoreAttrs": true,
+          "mergeAttrs": true,
+          "normalize": true,
+          "normalizeTags": true,
+          "trim": true
+        }
+      },
+      "id": "163ee333-c33c-43c1-ad5b-b255c22e2d18",
+      "name": "Convert Sitemap to JSON",
+      "type": "n8n-nodes-base.xml",
+      "position": [
+        -1080,
+        -120
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "include": "selected",
+        "includeFields": "loc",
+        "options": {}
+      },
+      "id": "15422d80-209d-4347-bba6-03d8b5f8a27b",
+      "name": "Article URLs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.1,
+      "position": [
+        -1080,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "urlset.url",
+        "options": {}
+      },
+      "id": "26e9c120-c868-4cb2-a5f9-549a1533ce58",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        -1240,
+        40
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "loc"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -1160,
+        200
+      ],
+      "id": "aa5d6670-50bb-4a45-9363-c04ea4d14707",
+      "name": "Aggregate Article URLs"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://YOURWEBSITE/wp-json/wp/v2/posts/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "excerpt",
+              "value": "={{ $('Meta description').item.json.message.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c3632dbf-03b5-485e-b633-12a161810aa6",
+      "name": "HTTP Request2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -180,
+        60
+      ],
+      "credentials": {
+        "wordpressApi": {
+          "id": "e0mwwCta4eVXaB6i",
+          "name": "YOUR WORDPRESS ACCOUNT"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Keyword Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keyword Research": {
+      "main": [
+        [
+          {
+            "node": "Get Sitemap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Planner": {
+      "main": [
+        [
+          {
+            "node": "Slug",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Researcher H2A": {
+      "main": [
+        [
+          {
+            "node": "Fix Links H2A",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Researcher H2B": {
+      "main": [
+        [
+          {
+            "node": "Fix Links H2B",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Researcher H2C": {
+      "main": [
+        [
+          {
+            "node": "Fix Links H2C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Researcher H2D": {
+      "main": [
+        [
+          {
+            "node": "Fix Links H2D",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Researcher H2E": {
+      "main": [
+        [
+          {
+            "node": "Fix Links H2E",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Researcher H2F": {
+      "main": [
+        [
+          {
+            "node": "Fix Links H2F",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Researcher H2G": {
+      "main": [
+        [
+          {
+            "node": "Fix Links H2G",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Researcher H2H": {
+      "main": [
+        [
+          {
+            "node": "Fix Links H2H",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Researcher H2I": {
+      "main": [
+        [
+          {
+            "node": "Fix Links H2I",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slug": {
+      "main": [
+        [
+          {
+            "node": "Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Title": {
+      "main": [
+        [
+          {
+            "node": "Meta description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta description": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor Intro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor Intro": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Researcher H2A",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links H2A": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor H2A",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links H2B": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor H2B",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor H2A": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Researcher H2B",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor H2B": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Researcher H2C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor Conc": {
+      "main": [
+        [
+          {
+            "node": "Wordpress Post Creation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links H2C": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor H2C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor H2C": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Researcher H2D",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links H2D": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor H2D",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor H2D": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Researcher H2E",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links H2E": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor H2E",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor H2E": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Researcher H2F",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links H2F": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor H2F",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor H2F": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Researcher H2G",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links H2G": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor H2G",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor H2G": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Researcher H2H",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links H2H": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor H2H",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor H2H": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Researcher H2I",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fix Links H2I": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor H2I",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Editor H2I": {
+      "main": [
+        [
+          {
+            "node": "Copy Editor Conc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wordpress Post Creation": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Mark As Complete on Keyword Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark As Complete on Keyword Research": {
+      "main": [
+        [
+          {
+            "node": "Update Completed Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Sitemap": {
+      "main": [
+        [
+          {
+            "node": "Convert Sitemap to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Sitemap to JSON": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article URLs": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Article URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Article URLs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Article URLs": {
+      "main": [
+        [
+          {
+            "node": "Content Planner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6726e0f5-42c2-4369-a8c6-121a4e31e1a4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "89939328b5f1a3493ff35848108ea8703718f1d7104a6a9750d05f9df63da36e"
+  },
+  "id": "nu8hvuIOz76rCy3N",
+  "tags": []
+}

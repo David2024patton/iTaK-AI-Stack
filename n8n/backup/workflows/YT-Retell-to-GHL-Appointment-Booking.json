@@ -1,0 +1,509 @@
+{
+  "name": "YT: Book GHL Appointment",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "7ac73d8a-3711-4c2c-831f-e9936c127135",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        20
+      ],
+      "id": "9c52b386-8088-4b47-9c73-7d5b38f45851",
+      "name": "Webhook",
+      "webhookId": "7ac73d8a-3711-4c2c-831f-e9936c127135"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer pit-0d47862a-1063-4c5f-81d9-594e19063708"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"locationId\": \"Foj3hcjI34fIq22FzdQq\",\n  \"page\": 1,\n  \"pageLimit\": 1,\n  \"filters\": [\n    {\n       \"field\": \"phone\",\n       \"operator\": \"eq\",\n       \"value\": \"{{ $json.body.args.client_phone }}\"\n    }\n  ],\n  \"sort\": [\n    {\n      \"field\": \"firstNameLowerCase\",\n      \"direction\": \"asc\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        140,
+        20
+      ],
+      "id": "6f379c53-eb05-42e1-8238-6aa611f3700a",
+      "name": "Search Contact"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "booked",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Booked"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e3974b45-3e6b-40d0-8bb5-d2563f6e44c6",
+                    "leftValue": "={{ $json.error.status }}",
+                    "rightValue": 400,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Not Avail"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Error"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1100,
+        -300
+      ],
+      "id": "2810444e-2028-4647-a7c8-093c615cbee8",
+      "name": "Booked Status"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.total }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Found"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a0af5a1e-2946-491c-895b-591f4f7bf638",
+                    "leftValue": "={{ $json.total }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Not Found"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Error"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "fc2d06a6-18ef-4b85-a371-86803062533d",
+      "name": "Contact Status"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn {\n  \"result\": \"I apologize, seems like are having an issue.\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        240
+      ],
+      "id": "4080fffc-8394-42b9-b36d-c94e0f00b968",
+      "name": "Res: Contact Error to Retell"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn {\n  \"result\": \"I apologize, seems like are having an issue.\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        -60
+      ],
+      "id": "d8bfea6e-79c3-4053-9316-02e9a2d62224",
+      "name": "Res: Appt Error to Retell"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  \"result\": \"Your Appointment has been booked.\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        -520
+      ],
+      "id": "bfd87cba-5401-4d8e-bc60-f39817dd4236",
+      "name": "Res: Appt Booked to Retell"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  \"result\": \"I'm sorry, seems like that appointment was just booked.\"\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        -280
+      ],
+      "id": "96688e57-8c38-4481-8713-e58383f18889",
+      "name": "Res: Appt Not Avail to Retell"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/contacts/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer pit-e0142607-044f-40d6-8dbb-880908d2ed6e"
+            },
+            {
+              "name": "Version",
+              "value": "2021-07-28"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $('Webhook').item.json.body.args.client_name }}\",\n  \"locationId\": \"HZO2WJdZpXz74QIj6rYN\",\n  \"phone\": \"{{ $('Webhook').item.json.body.args.client_phone }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        0
+      ],
+      "id": "0dd92c50-01d5-4abd-9733-de16f73fbf7f",
+      "name": "Create Contact",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/calendars/events/appointments",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer pit-e0142607-044f-40d6-8dbb-880908d2ed6e"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"calendarId\": \"TvFXjU0YfbihcAT4jCpS\",\n  \"locationId\": \"HZO2WJdZpXz74QIj6rYN\",\n  \"contactId\": \"{{ $json.contact.id }}\",\n  \"startTime\": \"{{ $('Webhook').item.json.body.args.appointment_datetime }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        0
+      ],
+      "id": "939338c9-49d1-4bf7-8df0-18f44cce2864",
+      "name": "New Contact: Create Appointment",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://services.leadconnectorhq.com/calendars/events/appointments",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer pit-e0142607-044f-40d6-8dbb-880908d2ed6e"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"calendarId\": \"TvFXjU0YfbihcAT4jCpS\",\n  \"locationId\": \"HZO2WJdZpXz74QIj6rYN\",\n  \"contactId\": \"{{ $json.contacts[0].id }}\",\n  \"startTime\": \"{{ $('Webhook').item.json.body.args.appointment_datetime }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        -260
+      ],
+      "id": "e2a6a892-71cd-4e26-ba5b-44653b8fb446",
+      "name": "Existing Contact: Create Appointment",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Booking Appointment from Retell to GHL Cal \n**Watch the video below to learn how to use the workflow**\n\n👉 [Quick Video Walkthrough](https://www.loom.com/share/3f6e1e1f43964e84b14f5e28a571d484?sid=c1e96f49-f2fd-4f3f-9923-a1205b2bf844)\n\n\n**Make sure to Replace**\n1. Private Integrations Key\n2. Location ID\n3. Calendar ID\n\n\n**API Docs**\n- [GHL API: Search Contact](https://highlevel.stoplight.io/docs/integrations/dbe4f3a00a106-search-contacts)\n- [GHL API: Create Appointment](https://highlevel.stoplight.io/docs/integrations/a192f863cad27-create-appointment)\n- [GHL API: Create Contact](https://highlevel.stoplight.io/docs/integrations/4c8362223c17b-create-contact)\n\n\n📺  This is the workflow as seen in my [Youtube Video](https://youtu.be/Pz0nukjcJXY)",
+        "height": 480,
+        "width": 580,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -600
+      ],
+      "typeVersion": 1,
+      "id": "69881322-f08c-411b-952a-1832585f5035",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Search Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Contact": {
+      "main": [
+        [
+          {
+            "node": "Contact Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Booked Status": {
+      "main": [
+        [
+          {
+            "node": "Res: Appt Booked to Retell",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Res: Appt Not Avail to Retell",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Res: Appt Error to Retell",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contact Status": {
+      "main": [
+        [
+          {
+            "node": "Existing Contact: Create Appointment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create Contact",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Res: Contact Error to Retell",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Res: Contact Error to Retell": {
+      "main": [
+        []
+      ]
+    },
+    "Create Contact": {
+      "main": [
+        [
+          {
+            "node": "New Contact: Create Appointment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New Contact: Create Appointment": {
+      "main": [
+        [
+          {
+            "node": "Booked Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Existing Contact: Create Appointment": {
+      "main": [
+        [
+          {
+            "node": "Booked Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "306a3e66-b7e8-47ce-aec6-8ca05c94201a",
+  "meta": {
+    "instanceId": "cd7cea19fae68e6464508a8bc0bf1e55f6a97160cbacaaa09a9edcde9677afdf"
+  },
+  "id": "0X8TFmp4iPvV3aWo",
+  "tags": []
+}

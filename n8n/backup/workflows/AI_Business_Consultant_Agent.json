@@ -1,0 +1,515 @@
+{
+  "name": "AI Business Consultant Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is Steve. What business idea can I assist you with today?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -40,
+        0
+      ],
+      "id": "76a75dcb-78b2-4699-8ac7-a3e4c6285ffa",
+      "name": "When chat message received",
+      "webhookId": "8302174e-649e-4808-86f6-fa861e07a305"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=## ROLE\nYou are a business consultant that is evaluating an early stage business idea and providing analysis and insights into if and how I should proceed with executing this business.\n\n## TASK\nYou will be provided with some text describing a business idea. This idea may not be fully formed and could be vague. You must reason and think creatively to provide useful advice. When given the business idea, you must complete the following:\n1. Research on the internet to find a maximum of 5 businesses that sell tools, products or services similar to this idea.\n2. If there are similar businesses, use openly available data to estimate the value of these tools that these businesses are selling. The valuation should be in terms of Annual Recurring Revenue in GBP.\n3. If there are similar businesses, perform a whitespace analysis to identify unique selling points that I should focus on.\n4. Based on the whitespace analysis, recommend the best target audience. Be as specific as possible.\n5. Extrapolate the relevant industry that this business idea and target market should focus on and perform research to estimate the market size in terms of Total Addressable Market (GBP and number of people).\n6. Combine all of your workings into a summarised report, no more than 3000 words.\n\n## RULES\n- Return your response by strictly following the JSON schema provided. Do not include any additional information in the response:\n{\n    \"success\": boolean,\n    \"idea\": string,\n    \"research\": {\n        \"similar_tools\": [\n        {\n            \"name_of_tool\": string,\n            \"business_name\":  string,\n            \"website_url\": string,\n            \"estimated_arr\": string,\n        }\n        ],\n        \"whitespace_analysis\": {\n        \"unique_selling_points\": list[string]\n        },\n        \"recommended_industry\": {\n        \"industry_name\": string,\n        \"market_size_tam\": string\n        }\n    }\n}\n\n## DATA\n- Business idea: {{ $json.chatInput }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        420,
+        0
+      ],
+      "id": "48fc755f-5a0a-4e05-85ca-ca61ac86c85c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-5-haiku-20241022",
+          "mode": "list",
+          "cachedResultName": "Claude 3.5 Haiku"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        160
+      ],
+      "id": "8bb5bb6e-325b-4c8d-b9ee-d79a8e687704",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "mdraxQ9KyOfR1Zni",
+          "name": "Anthropic API Key"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        180,
+        340
+      ],
+      "id": "5561671d-d9e8-4e5a-97ce-37aa8ba80313",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "name": "FindSimilarTools",
+        "description": "This tool is used to find similar tools to the business idea.",
+        "workflowId": {
+          "__rl": true,
+          "value": "A8tC8sPZ3agTw4oR",
+          "mode": "list",
+          "cachedResultName": "Tool - FindSimilarTools"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "={{ $json.chatInput }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        320,
+        500
+      ],
+      "id": "87968d0d-e26f-411c-bddb-f537e2bb759f",
+      "name": "FindSimilarTools"
+    },
+    {
+      "parameters": {
+        "name": "EstimateAnnualRecurringRevenue",
+        "description": "This tool is used to research the estimated Annual Recurring Revenue of a tool that a business sells.",
+        "workflowId": {
+          "__rl": true,
+          "value": "ibsxLVCbnEzC0Kva",
+          "mode": "list",
+          "cachedResultName": "Tool - EstimateAnnualRecurringRevenue"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "={{ $json.chatInput }}"
+          },
+          "matchingColumns": [
+            "text"
+          ],
+          "schema": [
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        440,
+        380
+      ],
+      "id": "5209041c-1cda-4d0c-8ed6-395d80af8f2a",
+      "name": "EstimateAnnualRecurringRevenue"
+    },
+    {
+      "parameters": {
+        "name": "WhitespaceAnalysis",
+        "description": "This tool conducts a whitespace analysis for a business idea to find opportunities for unique selling points.",
+        "workflowId": {
+          "__rl": true,
+          "value": "kCPrsxt85Jz0gEzm",
+          "mode": "list",
+          "cachedResultName": "Tool - WhitespaceAnalysis"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "={{ $json.chatInput }}"
+          },
+          "matchingColumns": [
+            "text"
+          ],
+          "schema": [
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        520,
+        580
+      ],
+      "id": "68f5b4f0-f82b-4e5c-8001-6abbfaeedc45",
+      "name": "WhitespaceAnalysis"
+    },
+    {
+      "parameters": {
+        "name": "ResearchMarketSize",
+        "description": "This tool is used to estimate the market size for a business idea in terms of total addressable market.",
+        "workflowId": {
+          "__rl": true,
+          "value": "pKrUpIo4KdrK7WeY",
+          "mode": "list",
+          "cachedResultName": "Tool - ResearchMarketSize"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "={{ $json.chatInput }}"
+          },
+          "matchingColumns": [
+            "text"
+          ],
+          "schema": [
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        600,
+        380
+      ],
+      "id": "d02aa638-acc0-4494-98db-7ff4249b4ceb",
+      "name": "ResearchMarketSize"
+    },
+    {
+      "parameters": {
+        "name": "IdentifyTargetAudience",
+        "description": "This tool is used to recommend the best target audience for the business idea.",
+        "workflowId": {
+          "__rl": true,
+          "value": "8nfP0R75rVP2VQgF",
+          "mode": "list",
+          "cachedResultName": "Tool - IdentifyTargetAudience"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "={{ $json.chatInput }}"
+          },
+          "matchingColumns": [
+            "text"
+          ],
+          "schema": [
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        740,
+        500
+      ],
+      "id": "ae12dede-8bb7-4ef9-adf4-127689bc1396",
+      "name": "IdentifyTargetAudience"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"$id\": \"https://example.com/business_idea.schema.json\",\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"title\": \"Business Idea Research Schema\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"success\": {\n      \"type\": \"boolean\"\n    },\n    \"idea\": {\n      \"type\": \"string\"\n    },\n    \"research\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"similar_tools\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"name_of_tool\": {\n                \"type\": \"string\"\n              },\n              \"business_name\": {\n                \"type\": \"string\"\n              },\n              \"website_url\": {\n                \"type\": \"string\"\n              },\n              \"estimated_arr\": {\n                \"type\": \"string\"\n              }\n            },\n            \"required\": [\n              \"name_of_tool\",\n              \"business_name\",\n              \"website_url\",\n              \"estimated_arr\"\n            ]\n          }\n        },\n        \"whitespace_analysis\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"unique_selling_points\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"string\"\n              }\n            }\n          },\n          \"required\": [\"unique_selling_points\"]\n        },\n        \"recommended_industry\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"industry_name\": {\n              \"type\": \"string\"\n            },\n            \"market_size_tam\": {\n              \"type\": \"string\"\n            }\n          },\n          \"required\": [\"industry_name\", \"market_size_tam\"]\n        }\n      },\n      \"required\": [\n        \"similar_tools\",\n        \"whitespace_analysis\",\n        \"recommended_industry\"\n      ]\n    }\n  },\n  \"required\": [\"success\", \"idea\", \"research\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        820,
+        300
+      ],
+      "id": "2cf6a3b1-8724-4805-9527-db47c90f9898",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Here is the original idea from the user: {{ $('When chat message received').item.json.chatInput }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=## ROLE\nYou are a business consultant that is evaluating an early stage business idea and providing analysis and insights into if and how I should proceed with executing this business.\n\n## TASK\nSummarise all of your findings using the data provided in less than 3000 words.\n\n## DATA\n- Business idea: {{ $('When chat message received').item.json.chatInput }}\n- Similar tools: {{ $json.output.research.similar_tools.map((obj, idx) => ` ${idx + 1}. Tool: ${obj.name_of_tool}, Business: ${obj.business_name}, Website URL: ${obj.website_url}`) }}\n- Whitespace analysis: {{ $json.output.research.whitespace_analysis.unique_selling_points }}\n- Recommended industry: {{ $json.output.research.recommended_industry.industry_name }}, market size = {{ $json.output.research.recommended_industry.market_size_tam }}"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        920,
+        0
+      ],
+      "id": "f1765720-09a8-4932-8f82-44beafbcc5db",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-3-5-haiku-20241022",
+          "mode": "list",
+          "cachedResultName": "Claude 3.5 Haiku"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1060,
+        180
+      ],
+      "id": "59b85008-f9fb-45c7-bf05-72948bd70f84",
+      "name": "Anthropic Chat Model1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "mdraxQ9KyOfR1Zni",
+          "name": "Anthropic API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "",
+        "subject": "Here's your business report!",
+        "emailType": "text",
+        "message": "={{ $json.response.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1340,
+        0
+      ],
+      "id": "7f253e8c-5b5c-4685-ad69-4d4d4e7ccb58",
+      "name": "Gmail",
+      "webhookId": "df183f7a-070f-4636-99f5-ae8ca59a36f8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QFTnEmB1LEFyyLEC",
+          "name": "Gmail OAuth"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FindSimilarTools": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EstimateAnnualRecurringRevenue": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhitespaceAnalysis": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ResearchMarketSize": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IdentifyTargetAudience": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "04253ae2-91ab-4a96-8b49-22d2619cc077",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "198a32ea450466a1d32b22351ad2291a0ff5a2ef214d21f9eb9338e11d2d85b5"
+  },
+  "id": "I9Ybow9UQ5l7S1PC",
+  "tags": []
+}

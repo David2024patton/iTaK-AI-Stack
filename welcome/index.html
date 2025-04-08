@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iTaK AI Stack - Welcome</title>
+    <style>
+        :root {
+            --primary-color: #4a6cf7;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #e9ecef;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .welcome-message {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .service-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .service-card p {
+            margin: 0.5rem 0;
+        }
+
+        .security-notice {
+            background-color: #ffeeba;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 5px;
+        }
+
+        .access-instructions {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .access-instructions h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .access-instructions ol {
+            padding-left: 1.5rem;
+        }
+
+        .access-instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background-color: #f1f1f1;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 10px 10px 0 0;
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>iTaK AI Stack</h1>
+            <p class="subtitle">Created by David Patton | <a href="https://YouTube.com/@David-Patton" style="color: white; text-decoration: underline;">YouTube Channel</a></p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-message">
+            <h2>Welcome to Your AI Development Environment</h2>
+            <p>This server is running the iTaK AI Stack, a comprehensive collection of tools for AI development, automation, and data management.</p>
+        </div>
+
+        <div class="security-notice">
+            <h3>⚠️ Security Notice</h3>
+            <p>For security reasons, the full dashboard is only accessible from localhost (on the server itself). This public page provides information about the available services without exposing sensitive controls.</p>
+        </div>
+
+        <div class="access-instructions">
+            <h2>How to Access the Full Dashboard</h2>
+            <ol>
+                <li>Connect directly to the server (via SSH, RDP, or physical access)</li>
+                <li>Open a web browser on the server</li>
+                <li>Navigate to <code>http://localhost</code></li>
+                <li>You'll see the full dashboard with all controls and services</li>
+            </ol>
+        </div>
+
+        <h2>Available Services</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>n8n</h3>
+                <p>Workflow automation platform for connecting various services and APIs.</p>
+                <p><strong>Use cases:</strong> Create automated workflows, connect to APIs, process data</p>
+            </div>
+
+            <div class="service-card">
+                <h3>OpenWebUI</h3>
+                <p>Web interface for interacting with Ollama's large language models.</p>
+                <p><strong>Use cases:</strong> Chat with AI models, generate text, create AI assistants</p>
+            </div>
+
+            <div class="service-card">
+                <h3>Ollama</h3>
+                <p>Run large language models locally with a simple API.</p>
+                <p><strong>Use cases:</strong> Local AI inference, custom model deployment</p>
+            </div>
+
+            <div class="service-card">
+                <h3>SearXNG</h3>
+                <p>Privacy-respecting metasearch engine.</p>
+                <p><strong>Use cases:</strong> Private web searches, research, data gathering</p>
+            </div>
+
+            <div class="service-card">
+                <h3>YouTube Downloader</h3>
+                <p>Tool for downloading videos from YouTube and other platforms.</p>
+                <p><strong>Use cases:</strong> Content archiving, offline viewing, data collection</p>
+            </div>
+
+            <div class="service-card">
+                <h3>Web Scraper (Crawlee)</h3>
+                <p>Modern web scraping API powered by Playwright and Crawlee.</p>
+                <p><strong>Use cases:</strong> Data extraction, web automation, content monitoring</p>
+            </div>
+
+            <div class="service-card">
+                <h3>Flowise</h3>
+                <p>Build LLM apps with a visual interface.</p>
+                <p><strong>Use cases:</strong> Create AI workflows, build chatbots, design agents</p>
+            </div>
+
+            <div class="service-card">
+                <h3>Portainer</h3>
+                <p>Container management UI for Docker.</p>
+                <p><strong>Use cases:</strong> Manage containers, monitor resources, deploy applications</p>
+            </div>
+
+            <div class="service-card">
+                <h3>Adminer</h3>
+                <p>Database management tool.</p>
+                <p><strong>Use cases:</strong> Manage databases, run queries, import/export data</p>
+            </div>
+
+            <div class="service-card">
+                <h3>Supabase (PostgreSQL)</h3>
+                <p>PostgreSQL database for application data storage.</p>
+                <p><strong>Use cases:</strong> Data storage, application backend, structured data</p>
+            </div>
+        </div>
+
+        <div class="access-instructions">
+            <h2>Integration Examples</h2>
+            <p>Here are some ways you can combine these services:</p>
+            <ul>
+                <li><strong>AI-Powered Data Pipeline:</strong> Use the Web Scraper to collect data, process it with n8n, store it in Supabase, and analyze it with Ollama.</li>
+                <li><strong>Content Creation Workflow:</strong> Research topics with SearXNG, download reference videos with YouTube Downloader, and generate content with OpenWebUI.</li>
+                <li><strong>Custom AI Agent:</strong> Build an agent in Flowise that uses Ollama for reasoning, n8n for actions, and Web Scraper for gathering information.</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>iTaK AI Stack | Created by David Patton | <a href="https://YouTube.com/@David-Patton">YouTube Channel</a></p>
+        </div>
+    </footer>
+</body>
+</html>

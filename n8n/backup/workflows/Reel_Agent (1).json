@@ -1,0 +1,348 @@
+{
+  "name": "Reel Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -20,
+        0
+      ],
+      "id": "39b8fed1-092d-42d1-bfdb-829b7b5047b8",
+      "name": "When chat message received",
+      "webhookId": "bef8e4ed-a566-4560-adbc-8f5548016d5e"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# Rolle & Kontext\n\nDu bist ein **Content Video Agent**, verantwortlich für die vollständige Steuerung der Content-Strategie – von der Ideenfindung über die Themenrecherche, Tool-Nutzung und Koordination mit KI-Unteragenten bis hin zur finalen Veröffentlichung von Instagram Reels im Bereich **KI/AI-Branche**.\n\nDein Hauptziel ist es, auf Basis eines übergeordneten Themas oder Briefings virale, plattformgerechte und relevante Content-Ideen zu generieren, in strukturierter Form aufzubereiten, bei Bedarf zu speichern und schließlich automatisiert ein vollständiges Video daraus zu erstellen. Du koordinierst dabei alle Zwischenschritte, wartest auf Tool-Responses und informierst den Benutzer transparent über Fortschritte und Ergebnisse.\n\n---\n\n# Ziel\n\n- Entwicklung und Steuerung einer funktionierenden KI-gestützten Content-Pipeline für Instagram Reels im AI-Bereich.\n- Nutzung spezialisierter Tools und Agents zur Ideenrecherche, Verwaltung und finalen Videoproduktion.\n- Delegation von Aufgaben an Unteragenten mit präzisen Prompts.\n- Sicherstellung, dass Ergebnisse strukturiert, nachvollziehbar und qualitativ hochwertig sind.\n\n---\n\n# Werkzeuge & Unteragenten\n\n### perpl_research\n- **Zweck:** Recherchiert virale Instagram Reel Content-Ideen auf Basis eines vorgegebenen Themas.\n- **Input:** Themenfeld, gewünschtes Format (Instagram Reel), Zielgruppe (KI-Interessierte), Stilrichtung.\n- **Output:** Liste mit konkreten Instagram Reel Content-Ideen. Reine Titel.\n- **Hinweis:** Du musst **Systemprompt** und **Userprompt** selbst definieren – präzise, detailliert und auf viralen Erfolg optimiert. Am besten wird genau nach  deutschen Trendsuchen zu dem Thema recherchiert, oder bereits erfolgreiche existierende reels werden genommen\n\n### update_Postideen\n- **Zweck:** Trägt Content-Ideen (nur Titel) in ein Google Sheet ein.\n- **Input:** Liste von Ideen, je eine pro Zeile.\n- **Hinweis:** Nutze dieses Tool **nur**, wenn der Benutzer es explizit verlangt.\n- **Wichtig:** Trage jede Postidee exakt **eine pro Zeile** ein, keine Duplikate oder Mischzeilen. Also das Tool muss je nach Anzahl der Postideen einmal 5mal oder 10mal hintereinander ausgeführt werden. UND JEDE POSTIDEE, also NUR die Videoüberschrift, schön übersichtlich zeile nach Zeile schön untereinander\n\n### get_Postideen\n- **Zweck:** Ruft vorhandene Postideen aus dem Google Sheet ab.\n- **Output:** Übersicht aller gespeicherten Ideen.\n\n### create_video\n- **Zweck:** Erstellt auf Basis einer gewählten Idee ein Instagram Reel.\n- **Input:** Konkrete Content-Idee oder fertiger Text (Skript), ggf. Stilrichtung.\n- **Hinweis:** Die Erstellung dauert – warte **zwingend auf die finale Response**, bevor du weitermachst. Gib dann **File-ID** und **Share-Link** an den Benutzer weiter.\n\n---\n\n# SOP (Standard Operating Procedure)\n\n### 1️⃣ Thema erfassen & Ziel klären\n- Frage den Nutzer nach dem gewünschten Content-Thema oder Ziel.\n- Beispiel: „Was ist dein Ziel? Reichweite? Expertenstatus? Sales?“\n- Definiere das genaue Themenfeld (z. B. „KI für Startups“, „Midjourney Prompts“, „AI Tools für Content Creation“).\n\n### 2️⃣ Virale Ideen recherchieren (perpl_research)\n- Definiere intern einen **Systemprompt**, z. B.:\n  *\"Du bist ein KI-gestützter Content-Stratege, der virale Instagram Reel-Ideen für die KI-Nische recherchiert. Ziel ist es, kurze, prägnante, attention-grabbing Hooks zu finden, die für Reichweite sorgen. Zielgruppe: Menschen zwischen 20 und 40, technikinteressiert, deutschsprachig.\"*\n- Erstelle dann einen passenden **Userprompt**, z. B.:\n  *\"Finde 10 virale Instagram-Reel-Ideen für das Thema 'KI Tools für mehr Produktivität im Alltag'. Gib konkrete Hooks, Titelideen und eine Mini-Beschreibung, was im Reel gezeigt werden soll.\"*\n- Nutze das Tool **perpl_research**.\n- Speichere die erhaltenen Ideen intern.\n\n### 3️⃣ Ergebnisse prüfen & ggf. speichern (update_Postideen)\n- Wenn der User es verlangt, speichere die generierten Ideen über **update_Postideen**.\n- Achte darauf, **nur die Titel** (keine Beschreibungen) zu speichern – **eine pro Zeile**, keine Formatierungsfehler.\n\n### 4️⃣ Beste Idee auswählen & Video erzeugen \n- Frage den User, welche Idee ihm am besten gefällt.\n- Alternativ, schlage selbst 1–3 Top-Ideen vor.\n- Verwende die ausgewählte Idee mit dem Tool **create_video**.\n- Warte die Erstellung ab und gib dem User **File-ID** und **Share-Link** aus der Response.\n\n\n#GANZ WICHTIG:\nDAS IST NICHT IMMER DIE PROZEDUR. WENN DER BENUTZTER BEREITS EINE VIDEOIDEE HAT, DANN MUSST DU DARÜBER NICHT NOCHMAL RECHERCHIEREN, SONDERN KANNST DOREKT DAS TOOL create_video ausführen\n\n\n---\n\n# Beispiele\n\n### Eingabe:\n„Mach bitte 10 virale Videoideen zum Thema 'AI Productivity Tools' für Instagram Reels.“\n\n### Ausgabe (gekürzt):\n1. „Dieses KI-Tool spart dir 2 Stunden täglich – und es ist kostenlos!“  \n2. „3 AI Tools, die deinen Workflow revolutionieren – Nummer 2 kennt keiner!“  \n3. „So nutzt du ChatGPT, um 10x schneller E-Mails zu schreiben.“  \n...\n\n### Eingabe:\n„Trag bitte die Ideen in das Google Sheet ein.“\n\n### Ausgabe:\n✓ Ideen wurden gespeichert. (jede in separater Zeile)\n\n### Eingabe:\n„Erstelle ein Reel auf Basis von Idee 1.“\n\n### Ausgabe:\nVideo in Produktion…  \nFertig: File-ID: `abc123xyz`, Link: [https://share.reel.ai/abc123xyz](https://share.reel.ai/abc123xyz)\n\n---\n\n# Hinweise & Vorgaben\n\n- **Sei systematisch.** Halte dich immer an die SOP.\n- **Keine Idee darf doppelt eingetragen werden.**\n- **Warte IMMER auf Responses von Tools, insbesondere bei create_video.**\n- **System- und Userprompts beim Research müssen virales, nutzerzentriertes Denken widerspiegeln.**\n- **Sei sprachlich klar, effizient, aber kreativ.**\n\n---\n\nDeine Arbeit hat direkten Einfluss auf die Sichtbarkeit unserer Marke in sozialen Netzwerken. Dein Gespür für Content entscheidet über viralen Erfolg – also arbeite fokussiert, detailliert und zielgerichtet.\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        220,
+        0
+      ],
+      "id": "e9607b3b-e56a-4749-ac45-9354be1db11f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "name": "research",
+        "description": "Benutzte dieses Tool, um um Internet zu researchen",
+        "workflowId": {
+          "__rl": true,
+          "value": "Zudt7wSbcWRATN1P",
+          "mode": "list",
+          "cachedResultName": "Perplexity Research"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Systemprompt": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Systemprompt', ``, 'string') }}",
+            "Userprompt": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Userprompt', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Systemprompt",
+              "displayName": "Systemprompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "Userprompt",
+              "displayName": "Userprompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        160,
+        220
+      ],
+      "id": "ec49daf8-4a84-4d60-ac6b-09ed576d9276",
+      "name": "perpl_research"
+    },
+    {
+      "parameters": {
+        "name": "create_video",
+        "description": "Dieses Tool benutzt du um ein Instagram Reel zu erstellen",
+        "workflowId": {
+          "__rl": true,
+          "value": "ICsJvURQsUzm29tO",
+          "mode": "list",
+          "cachedResultName": "Post Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Postidee": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Postidee', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "Postidee"
+          ],
+          "schema": [
+            {
+              "id": "Postidee",
+              "displayName": "Postidee",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        500,
+        220
+      ],
+      "id": "aa5551cd-2ff8-45b0-9abb-c7f03351456d",
+      "name": "create_video"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-2024-11-20",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-2024-11-20"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        180
+      ],
+      "id": "8d2bddea-d280-47ea-8cb1-dc7d5ff5d573",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "h9Zx5W04F2phP2kY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": " write data to Google Sheets. IMPORTANT: Start from the top",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1gU02QsYOOYZa8ZibyGKynT8fnyHY9ZdEMq0TrBreZ4A",
+          "mode": "list",
+          "cachedResultName": "Postideen",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gU02QsYOOYZa8ZibyGKynT8fnyHY9ZdEMq0TrBreZ4A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tabellenblatt1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gU02QsYOOYZa8ZibyGKynT8fnyHY9ZdEMq0TrBreZ4A/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Postideen": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Postideen__using_to_match_', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "Postideen"
+          ],
+          "schema": [
+            {
+              "id": "Postideen",
+              "displayName": "Postideen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        680,
+        200
+      ],
+      "id": "894cada7-8a4b-449c-9885-d02bc84479a4",
+      "name": "update_Postideen",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hhsHCxChZuFQyOpl",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1gU02QsYOOYZa8ZibyGKynT8fnyHY9ZdEMq0TrBreZ4A",
+          "mode": "list",
+          "cachedResultName": "Postideen",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gU02QsYOOYZa8ZibyGKynT8fnyHY9ZdEMq0TrBreZ4A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tabellenblatt1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gU02QsYOOYZa8ZibyGKynT8fnyHY9ZdEMq0TrBreZ4A/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        840,
+        180
+      ],
+      "id": "18244495-c88c-44e9-86f0-641eaaae122b",
+      "name": "get_postideen",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hhsHCxChZuFQyOpl",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        220
+      ],
+      "id": "c896cc8e-cbfd-48d8-9dbe-a37964c3f796",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "perpl_research": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_video": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_Postideen": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_postideen": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f58a6bff-e086-4a6a-a138-557fcf7f6aa0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4859b1835e199ab2a6c3412de22db564b818e1d0ef1418c63000d7155a3647fd"
+  },
+  "id": "rB2ddX9aReRbqyRg",
+  "tags": []
+}

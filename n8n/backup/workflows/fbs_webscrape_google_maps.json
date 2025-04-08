@@ -1,0 +1,198 @@
+{
+  "name": "fbs webscrape google maps",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2a889e70-c175-4000-afa3-7bc112321557",
+      "name": "When chat message received",
+      "webhookId": "b647c2f1-e3e9-4be0-965b-85826071d7a8"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# Overview\nYou are the personal assistant that excels at web scraping. Your job is to send the user's query to the correct tool. \n\n## Tools\n\n- google_maps_web_scraper: Use this tool to web scrape google. You'll want to aggregate all the results together and send a list back to the user\n## Workflow inputs\n- search: please insert the industry. For example: landscaping, or plumbing\n- location: please insert the city. For example: Boston, or Los Angeles\n- state: please insert the state/province code uppercase. For example: NY, CA\n- country: please insert the country code, lower case. For example: ca, or us\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        220,
+        0
+      ],
+      "id": "7b055ebe-a6a0-4eb0-b565-ddd7d382dcd6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        220
+      ],
+      "id": "7467b843-8477-4b66-aef7-3cebe0f76ac5",
+      "name": "Window Buffer Memory"
+    },
+    {
+      "parameters": {
+        "name": "google_maps_web_scraper",
+        "description": "Call this tool to web scrape Google maps",
+        "workflowId": {
+          "__rl": true,
+          "value": "Q1lp1Kvu4hvWhpYk",
+          "mode": "list",
+          "cachedResultName": "fbs googlemaps"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "country": "={{ $fromAI(\"countryCodeLowerCase\", \"this is the country code that you'll use to search Google Maps with, such asus, ca, etc - it must be lower case\") }}",
+            "state": "={{ $fromAI(\"stateInitials\", \"this is the intials of the state that you'll use to search Google Maps with, such as NY, CA, etc - uppercase\") }}",
+            "location": "={{ $fromAI(\"city\", \"this is the city that you'll use to search Google Maps with, such as New York, Los Angeles, etc\") }}",
+            "search": "={{ $fromAI(\"industry\", \"this is the industry that you'll use to search Google Maps with, such as landscaping, roofing, photography, etc\") }}"
+          },
+          "matchingColumns": [
+            "Test"
+          ],
+          "schema": [
+            {
+              "id": "search",
+              "displayName": "search",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "country",
+              "displayName": "country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        700,
+        240
+      ],
+      "id": "47315609-1332-40fc-aa62-bb688541ebef",
+      "name": "Google Maps Web Scraper"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        260
+      ],
+      "id": "0c737262-b8fe-48da-96db-206178bfb752",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "jVCpXQHd8woXOE4D",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Maps Web Scraper": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a379d8f4-d0a3-4167-8150-f3eab7e57e39",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "Hdyr3PQVo7t4N0h9",
+  "tags": []
+}

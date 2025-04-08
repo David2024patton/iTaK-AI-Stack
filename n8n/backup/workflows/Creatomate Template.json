@@ -1,0 +1,121 @@
+{
+  "output_format": "mp4",
+  "width": 1080,
+  "height": 1920,
+  "elements": [
+    {
+      "id": "87e27d0a-394f-4083-8cab-081494799fa3",
+      "name": "Video-1",
+      "type": "video",
+      "track": 1,
+      "time": 0,
+      "duration": 5,
+      "source": "placeholder",
+      "dynamic": true
+    },
+    {
+      "id": "91fd56b8-43a2-4c54-9e7f-274f9c82a1e",
+      "name": "Video-2",
+      "type": "video",
+      "track": 1,
+      "time": 5,
+      "duration": 5,
+      "source": "placeholder",
+      "dynamic": true
+    },
+    {
+      "id": "389075bc-c76b-423a-bc7d-8aea1e560e28",
+      "name": "Video-3",
+      "type": "video",
+      "track": 1,
+      "time": 10,
+      "duration": 5,
+      "source": "placeholder",
+      "dynamic": true
+    },
+    {
+      "id": "6f8a2d3c-51b9-4e67-a5d2-9c7b384b6e2f",
+      "name": "Video-4",
+      "type": "video",
+      "track": 1,
+      "time": 15,
+      "duration": 5,
+      "source": "placeholder",
+      "dynamic": true
+    },
+    {
+      "id": "5e92f4a7-12c3-4d8b-b5f3-7a6e8d2b9c1e",
+      "name": "Audio-Track",
+      "type": "audio",
+      "track": 2,
+      "time": 0,
+      "duration": 20,
+      "source": "placeholder",
+      "dynamic": true
+    },
+    {
+      "id": "a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p",
+      "name": "Text-1",
+      "type": "text",
+      "track": 3,
+      "time": 0,
+      "duration": 5,
+      "x": 540,
+      "y": 293.1046,
+      "text": "Dynamic Text 1",
+      "font_family": "Arial",
+      "font_size": 80,
+      "background_color": "rgba(0,0,0,0.65)",
+      "fill_color": "#ffffff",
+      "dynamic": true
+    },
+    {
+      "id": "q9w8e7r6-t5y4-3u2i-1o0p-a9s8d7f6g5h4",
+      "name": "Text-2",
+      "type": "text",
+      "track": 3,
+      "time": 5,
+      "duration": 5,
+      "x": 540,
+      "y": 293.1046,
+      "text": "Dynamic Text 2",
+      "font_family": "Arial",
+      "font_size": 80,
+      "background_color": "rgba(0,0,0,0.65)",
+      "fill_color": "#ffffff",
+      "dynamic": true
+    },
+    {
+      "id": "j4k5l6m7-n8o9-p0a1-s2d3-f4g5h6j7k8l9",
+      "name": "Text-3",
+      "type": "text",
+      "track": 3,
+      "time": 10,
+      "duration": 5,
+      "x": 540,
+      "y": 293.1046,
+      "text": "Dynamic Text 3",
+      "font_family": "Arial",
+      "font_size": 80,
+      "background_color": "rgba(0,0,0,0.65)",
+      "fill_color": "#ffffff",
+      "dynamic": true
+    },
+    {
+      "id": "z1x2c3v4-b5n6-m7a8-s9d0-f1g2h3j4k5l6",
+      "name": "Text-4",
+      "type": "text",
+      "track": 3,
+      "time": 15,
+      "duration": 5,
+      "x": 540,
+      "y": 293.1046,
+      "text": "Dynamic Text 4",
+      "font_family": "Arial",
+      "font_size": 80,
+      "background_color": "rgba(0,0,0,0.65)",
+      "fill_color": "#ffffff",
+      "dynamic": true
+    }
+  ]
+}

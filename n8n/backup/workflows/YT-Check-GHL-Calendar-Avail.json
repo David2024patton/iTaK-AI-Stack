@@ -1,0 +1,286 @@
+{
+  "name": "YT: Check GHL Calendar Avail",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d3d44719-4c7f-4332-857c-9c737ce3e2bb",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "bd038cd8-ae75-4ef0-8f86-b5acb691d8a3",
+      "name": "Webhook",
+      "webhookId": "d3d44719-4c7f-4332-857c-9c737ce3e2bb"
+    },
+    {
+      "parameters": {
+        "url": "https://services.leadconnectorhq.com/calendars/TvFXjU0YfbihcAT4jCpS/free-slots",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "startDate",
+              "value": "={{ $('Get Start Date').item.json.startDate }}"
+            },
+            {
+              "name": "endDate",
+              "value": "={{ $json.endDate }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer pit-e0142607-044f-40d6-8dbb-880908d2ed6e"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "Version",
+              "value": "2021-04-15"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        900,
+        0
+      ],
+      "id": "8037b70a-8489-492c-90e4-7f17ed7519c8",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// The datetime to check\nconst targetDateTime = $('Webhook').first().json.body.args.appointment_datetime;\n\n// The data object\nconst data = $input.first().json;\n\n// Helper function to format time while respecting the original timezone\nfunction formatTime(dateString) {\n  const date = new Date(dateString);\n  const options = {\n    hour: 'numeric',\n    minute: 'numeric',\n    hour12: true,\n    timeZone: 'America/Los_Angeles' // Use a specific timezone if needed\n  };\n  return date.toLocaleTimeString('en-US', options);\n}\n\n// Helper function to get day of the week\nfunction getDayOfWeek(dateString) {\n  const date = new Date(dateString);\n  const options = { weekday: 'long', timeZone: 'America/Los_Angeles' }; // Use specific timezone if needed\n  return date.toLocaleDateString('en-US', options);\n}\n\n// Flatten the slots into a single array\nlet allSlots = [];\nfor (const [date, details] of Object.entries(data)) {\n  if (details.slots) {\n    allSlots = allSlots.concat(details.slots);\n  }\n}\n\n// Check if the target datetime is present\nif (allSlots.includes(targetDateTime)) {\n  const day = getDayOfWeek(targetDateTime);\n  const time = formatTime(targetDateTime);\n  return { result: `${day} at ${time} is available.` };\n} else {\n  // Convert datetimes to Date objects with original strings for time zone preservation\n  const slotsWithOriginal = allSlots.map(slot => ({ date: new Date(slot), original: slot }));\n  const targetDate = new Date(targetDateTime);\n\n  // Sort slots by date\n  const sortedSlots = slotsWithOriginal.sort((a, b) => a.date - b.date);\n\n  // Find the two closest slots\n  let closestBefore = null;\n  let closestAfter = null;\n  let secondClosestAfter = null;\n\n  for (let i = 0; i < sortedSlots.length; i++) {\n    if (sortedSlots[i].date < targetDate) {\n      closestBefore = sortedSlots[i].original;\n    } else if (!closestAfter) {\n      closestAfter = sortedSlots[i].original;\n      if (i + 1 < sortedSlots.length) {\n        secondClosestAfter = sortedSlots[i + 1].original;\n      }\n      break;\n    }\n  }\n\n  // If no closestBefore, return two closest after\n  if (!closestBefore) {\n    closestBefore = closestAfter;\n    closestAfter = secondClosestAfter;\n  }\n\n  return { closestBefore, closestAfter };\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        0
+      ],
+      "id": "9745c760-ff87-4606-b7d0-05051175919f",
+      "name": "Return Time"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json.body.args.appointment_datetime }}",
+        "format": "x",
+        "outputFieldName": "startDate",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "df139fe8-5d1b-49b4-b358-773ba35cde37",
+      "name": "Get Start Date"
+    },
+    {
+      "parameters": {
+        "operation": "addToDate",
+        "magnitude": "={{ $json.startDate }}",
+        "duration": 1,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "57690362-2162-4b09-b6a5-42b8321e62ab",
+      "name": "Add 1 Day"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json.newDate }}",
+        "format": "x",
+        "outputFieldName": "endDate",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "0ac92535-2ce3-4d36-87c2-b8d71372b912",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "content": "## Check GHL Cal Availability \n**Watch the video below to learn how to use the workflow**\n\n👉 [Quick Video Walkthrough](https://www.loom.com/share/8d9cab795c414089860f57cf940df18f?sid=8fe7f7d3-d285-4857-8ce4-1daa7c464643)\n\n\n**Make sure to Replace**\n1. Private Integrations Key\n2. Calendar ID\n\n\n**API Docs**\n- [GHL API: Get Free Slots](https://highlevel.stoplight.io/docs/integrations/7f694ee8bd969-get-free-slots)\n\n\n\n📺  This is the workflow as seen in my [Youtube Video](https://youtu.be/Pz0nukjcJXY)",
+        "height": 360,
+        "width": 420,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -260,
+        -480
+      ],
+      "typeVersion": 1,
+      "id": "b2c4a815-2277-4cec-8357-4af357502206",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "🛑 Replace the **Calendar ID** in the url from the **Get** request."
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        840,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "1802b009-ef10-46fe-abb8-0cd14fa10adb",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.sgai.dev",
+            "user-agent": "PostmanRuntime/7.43.0",
+            "content-length": "106",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br",
+            "cache-control": "no-cache",
+            "content-type": "application/json",
+            "postman-token": "c6c31c00-11f5-47d0-aa93-caba0e5bb2f1",
+            "x-forwarded-for": "54.86.50.139",
+            "x-forwarded-host": "n8n.sgai.dev",
+            "x-forwarded-proto": "https"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "args": {
+              "appointment_datetime": "2025-02-21T11:00:00-08:00",
+              "service": "extensions consultation"
+            }
+          },
+          "webhookUrl": "https://n8n.sgai.dev/webhook-test/d3d44719-4c7f-4332-857c-9c737ce3e2bb",
+          "executionMode": "test"
+        }
+      }
+    ],
+    "HTTP Request": [
+      {
+        "json": {
+          "2025-02-21": {
+            "slots": [
+              "2025-02-21T11:00:00-08:00",
+              "2025-02-21T12:00:00-08:00",
+              "2025-02-21T15:00:00-08:00",
+              "2025-02-21T16:00:00-08:00"
+            ]
+          },
+          "2025-02-22": {
+            "slots": [
+              "2025-02-22T09:00:00-08:00",
+              "2025-02-22T10:00:00-08:00",
+              "2025-02-22T13:00:00-08:00",
+              "2025-02-22T14:00:00-08:00",
+              "2025-02-22T15:00:00-08:00",
+              "2025-02-22T16:00:00-08:00"
+            ]
+          },
+          "traceId": "32a43a21-0364-465e-beba-3c9fddfb938d"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Start Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Return Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Return Time": {
+      "main": [
+        []
+      ]
+    },
+    "Get Start Date": {
+      "main": [
+        [
+          {
+            "node": "Add 1 Day",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add 1 Day": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2b2893c3-094f-40a3-9ddb-afcd89a7ffdf",
+  "meta": {
+    "instanceId": "cd7cea19fae68e6464508a8bc0bf1e55f6a97160cbacaaa09a9edcde9677afdf"
+  },
+  "id": "9dfYHdm6SGrZ2Jl1",
+  "tags": []
+}

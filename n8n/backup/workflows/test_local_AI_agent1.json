@@ -1,0 +1,276 @@
+{
+  "name": "test local AI agent1",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.translatedText }}\n",
+        "options": {
+          "systemMessage": "You are a helpful assistant that helps user problems. Provide concise, direct answers without extra thoughts or explanations."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -1460,
+        -220
+      ],
+      "id": "1c410663-a783-4ccd-a910-f4247515bac3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "deepseek-r1-distill-qwen-7b",
+          "mode": "list",
+          "cachedResultName": "deepseek-r1-distill-qwen-7b"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1560,
+        20
+      ],
+      "id": "001c27c1-c127-4737-910d-4314b491f801",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Ba5zIRfejSrre90k",
+          "name": "Local AI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.translatedText }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1400,
+        20
+      ],
+      "id": "4dc4f76b-2759-4266-b554-9deb8b7baa6d",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5486df0a-b0d5-4d7f-9923-9c8622728fea",
+              "name": "cleanOutput",
+              "value": "={{ $('AI Agent').first().json.output.replace(/<think>[\\s\\S]*<\\/think>/g, '').replace(/\\n+/g, ' ').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1120,
+        -220
+      ],
+      "id": "81af21fe-87c3-4499-a3cd-2a96b36f36e5",
+      "name": "Clean output"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5151b19e-0f81-436c-921c-0322a5548f81",
+              "name": "output",
+              "value": "={{ $('Mongol ruu orchuulah').first().json.translatedText }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "ignoreConversionErrors": false,
+          "dotNotation": false
+        }
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -740,
+        -220
+      ],
+      "id": "a0c3d063-bb5b-4fea-91aa-c98dc1d79496",
+      "name": "Final Output"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1920,
+        -220
+      ],
+      "id": "ce6d8a19-00c0-4f52-a76c-b3060b87cd3b",
+      "name": "When chat message received",
+      "webhookId": "c331fc6e-f47f-4ab5-bbe4-018b824cd0b6"
+    },
+    {
+      "parameters": {
+        "content": "## Disruptor Ai Lab\n**Subscribe** хийгээрэй [Youtube](https://www.youtube.com/channel/UCw5FOrOj0eXQgLqYxmXFU0A)",
+        "height": 600,
+        "width": 1520,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2020,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "a31335a8-650f-4212-9a5f-1cb03d59e890",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.chatInput }}",
+        "translateTo": "en"
+      },
+      "type": "n8n-nodes-base.googleTranslate",
+      "typeVersion": 2,
+      "position": [
+        -1680,
+        -220
+      ],
+      "id": "d11f3e5f-2e47-4bd9-9143-eadf01dd97da",
+      "name": "Angli ruu orchuulah",
+      "credentials": {
+        "googleTranslateOAuth2Api": {
+          "id": "FwlzHMeLJUBbqYnx",
+          "name": "Google Translate account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.cleanOutput }}",
+        "translateTo": "mn"
+      },
+      "type": "n8n-nodes-base.googleTranslate",
+      "typeVersion": 2,
+      "position": [
+        -940,
+        -220
+      ],
+      "id": "5f263277-5215-42a0-8a73-ff0c597a8ebb",
+      "name": "Mongol ruu orchuulah",
+      "credentials": {
+        "googleTranslateOAuth2Api": {
+          "id": "FwlzHMeLJUBbqYnx",
+          "name": "Google Translate account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Clean output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean output": {
+      "main": [
+        [
+          {
+            "node": "Mongol ruu orchuulah",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final Output": {
+      "main": [
+        []
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Angli ruu orchuulah",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Angli ruu orchuulah": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mongol ruu orchuulah": {
+      "main": [
+        [
+          {
+            "node": "Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2fd63b5f-5879-487c-9114-71d18b4cdc54",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bccabc25cc438717ff14f607690000a1f8ffb85b844e437b62ed044c5cbe6658"
+  },
+  "id": "BB5AD8MJADEyk1jo",
+  "tags": []
+}
