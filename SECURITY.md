@@ -15,7 +15,7 @@ We take the security of iTaK-AI-Stack seriously. If you believe you've found a s
 
 1. **Do not disclose the vulnerability publicly** until it has been addressed by our team.
 2. **Submit your report privately** by creating a new issue with the title "SECURITY: [Brief description]" and mark it as private.
-3. Alternatively, you can email security concerns directly to [your-email@example.com].
+3. Alternatively, you can email security concerns directly to [david@itak.live].
 
 ### What to include in your report:
 - A clear description of the vulnerability
