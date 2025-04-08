@@ -1,0 +1,32 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  # Update Docker images in docker-compose files
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Optional: Add labels to pull requests
+    labels:
+      - "docker"
+      - "dependencies"
+    # Optional: Assign someone to review the PR
+    assignees:
+      - "David2024patton"
+
+  # Update Node.js dependencies for the dashboard
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Optional: Add labels to pull requests
+    labels:
+      - "npm"
+      - "dependencies"
+    # Optional: Assign someone to review the PR
+    assignees:
+      - "David2024patton"
