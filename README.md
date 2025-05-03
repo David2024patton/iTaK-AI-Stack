@@ -34,6 +34,10 @@ iTaK AI Stack is an all-in-one solution for AI development, automation, and data
 ## Installation
 
 1. Clone this repository or download and extract the ZIP file
+```powershell
+git clone https://github.com/David2024patton/iTaK-AI-Stack.git
+```
+   
 2. Open a terminal/PowerShell window in the extracted directory
 3. Run the installation script:
 
